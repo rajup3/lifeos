@@ -1,1 +1,2840 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Personal Life OS v0.3 — 10-Dimension Life Management & Smart Analytics</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 3px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-900 min-h-screen flex flex-col">
 
+  <!-- Top App Bar -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-30">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-indigo-600 text-white flex items-center justify-center font-bold text-lg shadow-sm">
+          OS
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="text-base sm:text-lg font-bold text-slate-900 tracking-tight">Personal Life OS</h1>
+            <span class="px-2 py-0.5 text-xs font-semibold rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200">v0.3 PWA</span>
+          </div>
+          <p class="text-xs text-slate-500">10 Dimensions • 4 Hierarchy Levels • P1–P4 Priorities • Habit Streaks</p>
+        </div>
+      </div>
+
+      <!-- Quick Status Pill & Actions -->
+      <div class="flex items-center gap-2 flex-wrap">
+        <div id="headerFocusPill" class="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-100 text-xs font-medium text-slate-700">
+          <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+          <span id="headerFocusText">4/5 Quarterly Focus Areas</span>
+        </div>
+        <button type="button" id="btnOpenQuickAdd" class="px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-xs sm:text-sm font-medium transition shadow-sm flex items-center gap-1.5">
+          <span>+ Quick Add</span>
+        </button>
+        <button type="button" id="btnOpenSyncModal" class="px-3 py-1.5 rounded-lg bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 text-xs sm:text-sm font-medium transition flex items-center gap-1.5">
+          <span>Backup &amp; Sync</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 overflow-x-auto custom-scrollbar">
+      <nav class="flex items-center gap-1 border-t border-slate-100 pt-1" aria-label="Main Navigation">
+        <button type="button" data-tab="dashboard" class="nav-tab-btn px-3.5 py-2.5 text-xs sm:text-sm font-semibold border-b-2 border-indigo-600 text-indigo-600 whitespace-nowrap transition">
+          Dashboard &amp; Daily 3
+        </button>
+        <button type="button" data-tab="dimensions" class="nav-tab-btn px-3.5 py-2.5 text-xs sm:text-sm font-medium border-b-2 border-transparent text-slate-600 hover:text-slate-900 whitespace-nowrap transition">
+          10 Life Dimensions
+        </button>
+        <button type="button" data-tab="hierarchy" class="nav-tab-btn px-3.5 py-2.5 text-xs sm:text-sm font-medium border-b-2 border-transparent text-slate-600 hover:text-slate-900 whitespace-nowrap transition">
+          Goals &amp; Tasks (P1–P4)
+        </button>
+        <button type="button" data-tab="habits" class="nav-tab-btn px-3.5 py-2.5 text-xs sm:text-sm font-medium border-b-2 border-transparent text-slate-600 hover:text-slate-900 whitespace-nowrap transition">
+          Habits &amp; Streaks
+        </button>
+        <button type="button" data-tab="calendar" class="nav-tab-btn px-3.5 py-2.5 text-xs sm:text-sm font-medium border-b-2 border-transparent text-slate-600 hover:text-slate-900 whitespace-nowrap transition">
+          7-Day Calendar &amp; Analytics
+        </button>
+        <button type="button" data-tab="review" class="nav-tab-btn px-3.5 py-2.5 text-xs sm:text-sm font-medium border-b-2 border-transparent text-slate-600 hover:text-slate-900 whitespace-nowrap transition">
+          Sunday Weekly Review
+        </button>
+        <button type="button" data-tab="v03analytics" class="nav-tab-btn px-3.5 py-2.5 text-xs sm:text-sm font-medium border-b-2 border-transparent text-indigo-700 hover:text-indigo-900 whitespace-nowrap transition flex items-center gap-1.5">
+          <span class="px-1.5 py-0.5 text-[10px] font-bold rounded bg-indigo-100 text-indigo-800">v0.3</span>
+          <span>Smart Prioritizer &amp; Analytics</span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Reminder Banner (v0.2 Notification Bar) -->
+  <div id="reminderBanner" class="hidden bg-amber-50 border-b border-amber-200 px-4 py-2">
+    <div class="max-w-7xl mx-auto flex items-center justify-between gap-2 text-xs text-amber-900">
+      <div id="reminderBannerText" class="font-medium"></div>
+      <button type="button" id="btnDismissReminder" class="text-amber-700 hover:text-amber-950 font-semibold px-2 py-0.5 rounded">Dismiss</button>
+    </div>
+  </div>
+
+  <!-- Main Workspace Container -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-6 space-y-6">
+
+    <!-- ==================== TAB 1: DASHBOARD & DAILY 3 ==================== -->
+    <section id="tab-dashboard" class="tab-panel space-y-6">
+      <!-- Top KPI Summary Row -->
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="bg-white rounded-xl p-4 border border-slate-200 shadow-sm">
+          <div class="text-xs font-medium text-slate-500">90-Day Active Focus</div>
+          <div class="mt-1 flex items-baseline justify-between">
+            <span id="kpiFocusCount" class="text-2xl font-bold text-slate-900">4 / 5</span>
+            <span id="kpiFocusStatus" class="text-xs font-semibold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700">Optimal (3–5)</span>
+          </div>
+          <p class="mt-1 text-xs text-slate-500">Rule 1: Keep remaining areas in maintenance</p>
+        </div>
+
+        <div class="bg-white rounded-xl p-4 border border-slate-200 shadow-sm">
+          <div class="text-xs font-medium text-slate-500">Today's Daily 3 &amp; Tasks</div>
+          <div class="mt-1 flex items-baseline justify-between">
+            <span id="kpiTasksStat" class="text-2xl font-bold text-indigo-600">0 / 0</span>
+            <span id="kpiP1Pending" class="text-xs font-semibold px-2 py-0.5 rounded-full bg-rose-50 text-rose-700">0 P1 Critical</span>
+          </div>
+          <p class="mt-1 text-xs text-slate-500">1 Responsibility • 1 Growth • 1 Family</p>
+        </div>
+
+        <div class="bg-white rounded-xl p-4 border border-slate-200 shadow-sm">
+          <div class="text-xs font-medium text-slate-500">Habit Consistency (7d)</div>
+          <div class="mt-1 flex items-baseline justify-between">
+            <span id="kpiHabitRate" class="text-2xl font-bold text-emerald-600">0%</span>
+            <span id="kpiTopStreak" class="text-xs font-semibold px-2 py-0.5 rounded-full bg-amber-50 text-amber-700">Top Streak: 0d</span>
+          </div>
+          <p class="mt-1 text-xs text-slate-500" id="kpiTodayHabitsDone">0 of 0 scheduled today</p>
+        </div>
+
+        <div class="bg-white rounded-xl p-4 border border-slate-200 shadow-sm">
+          <div class="text-xs font-medium text-slate-500">v0.2 Neglect Alerts</div>
+          <div class="mt-1 flex items-baseline justify-between">
+            <span id="kpiNeglectCount" class="text-2xl font-bold text-amber-600">0</span>
+            <button type="button" id="btnJumpNeglect" class="text-xs font-semibold text-indigo-600 hover:underline">Inspect →</button>
+          </div>
+          <p class="mt-1 text-xs text-slate-500">High-need areas needing action</p>
+        </div>
+      </div>
+
+      <!-- Daily 3 Focus Execution + Today's Habit Check-In -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <!-- Daily 3 Focus Panel -->
+        <div class="lg:col-span-7 bg-white rounded-xl border border-slate-200 shadow-sm p-5 space-y-4">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <div>
+              <h2 class="text-base font-bold text-slate-900">Today's 3 Key Actions (Daily Execution Rule)</h2>
+              <p class="text-xs text-slate-500">Pick 1 Responsibility, 1 Growth/Health, and 1 Family/Happiness action each day</p>
+            </div>
+            <button type="button" id="btnAutoFillDaily3" class="px-2.5 py-1.5 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-xs font-semibold transition">
+              Auto-Fill Top Priorities
+            </button>
+          </div>
+
+          <div id="daily3SlotsContainer" class="space-y-3"></div>
+        </div>
+
+        <!-- Today's Habits Quick Check-In -->
+        <div class="lg:col-span-5 bg-white rounded-xl border border-slate-200 shadow-sm p-5 space-y-4">
+          <div class="flex items-center justify-between">
+            <div>
+              <h2 class="text-base font-bold text-slate-900">Today's Habit Check-In</h2>
+              <p class="text-xs text-slate-500" id="todayDateSubtitle"></p>
+            </div>
+            <button type="button" id="btnDashToHabits" class="text-xs font-semibold text-indigo-600 hover:underline">Manage Habits →</button>
+          </div>
+
+          <div id="dashboardHabitsList" class="space-y-2.5 max-h-80 overflow-y-auto custom-scrollbar pr-1"></div>
+        </div>
+      </div>
+
+      <!-- v0.2 Neglect Alerts + Master 10-Dimension Snapshot -->
+      <div id="neglectAlertBox" class="bg-amber-50/80 border border-amber-200 rounded-xl p-4 space-y-3">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <div class="flex items-center gap-2">
+            <span class="px-2 py-0.5 text-xs font-bold uppercase tracking-wider rounded bg-amber-200 text-amber-900">v0.2 Alert</span>
+            <h3 class="text-sm font-bold text-amber-950">High-Priority Dimensions Needing Attention</h3>
+          </div>
+          <span class="text-xs text-amber-800">Areas scored 4–5 or in 90-Day Focus with no recent 7-day completions</span>
+        </div>
+        <div id="neglectAlertItems" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3"></div>
+      </div>
+
+      <!-- Master Life Dashboard Table -->
+      <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+        <div class="px-5 py-4 border-b border-slate-200 flex flex-wrap items-center justify-between gap-2">
+          <div>
+            <h2 class="text-base font-bold text-slate-900">Master 10-Dimension Dashboard</h2>
+            <p class="text-xs text-slate-500">Live overview of attention scores (1–5), 90-day focus status, outcomes, and next concrete actions</p>
+          </div>
+          <button type="button" id="btnDashToDimensions" class="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold transition">
+            Customize Scores &amp; Focus
+          </button>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse text-xs sm:text-sm">
+            <thead>
+              <tr class="bg-slate-50 text-slate-600 border-b border-slate-200">
+                <th class="py-3 px-4 font-semibold">Life Dimension</th>
+                <th class="py-3 px-3 font-semibold text-center">Attention Score</th>
+                <th class="py-3 px-3 font-semibold text-center">Mode</th>
+                <th class="py-3 px-4 font-semibold">90-Day Primary Outcome (L2)</th>
+                <th class="py-3 px-4 font-semibold">Next Concrete Action (L4)</th>
+                <th class="py-3 px-3 font-semibold text-center">7d Activity</th>
+              </tr>
+            </thead>
+            <tbody id="masterDashboardTableBody" class="divide-y divide-slate-100"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== TAB 2: 10 LIFE DIMENSIONS ==================== -->
+    <section id="tab-dimensions" class="tab-panel hidden space-y-6">
+      <div class="bg-white rounded-xl border border-slate-200 p-5 shadow-sm flex flex-wrap items-center justify-between gap-4">
+        <div>
+          <h2 class="text-base sm:text-lg font-bold text-slate-900">10 Major Life Dimensions &amp; Quarterly Focus</h2>
+          <p class="text-xs sm:text-sm text-slate-600 mt-0.5">
+            Rate each area from <strong>1 (Low attention needed)</strong> to <strong>5 (High attention needed)</strong>. Toggle <strong>90-Day Active Focus</strong> on 3 to 5 areas per quarter and keep the remaining dimensions in Maintenance mode.
+          </p>
+        </div>
+        <div id="dimensionsRuleBanner" class="px-3.5 py-2 rounded-xl bg-indigo-50 border border-indigo-200 text-xs font-semibold text-indigo-800">
+          Active Quarterly Focus: 4 / 5
+        </div>
+      </div>
+
+      <div id="dimensionsCardsGrid" class="grid grid-cols-1 md:grid-cols-2 gap-5"></div>
+    </section>
+
+    <!-- ==================== TAB 3: GOALS & TASKS (P1-P4 HIERARCHY) ==================== -->
+    <section id="tab-hierarchy" class="tab-panel hidden space-y-6">
+      <!-- Hierarchy Filter Bar -->
+      <div class="bg-white rounded-xl border border-slate-200 p-4 shadow-sm space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h2 class="text-base sm:text-lg font-bold text-slate-900">4-Level Hierarchy: 90-Day Outcomes (L2) &amp; Actions/Tasks (L4)</h2>
+            <p class="text-xs text-slate-500">Prioritize items across P1 Critical, P2 Growth, P3 Exploration, and P4 Maintenance</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <button type="button" id="btnAddGoalModal" class="px-3 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold transition">
+              + New 90-Day Outcome (L2)
+            </button>
+            <button type="button" id="btnAddTaskModal" class="px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold transition">
+              + New Task / Action (L4)
+            </button>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 pt-2 border-t border-slate-100">
+          <div>
+            <label for="filterDimension" class="block text-xs font-medium text-slate-600 mb-1">Life Dimension (L1)</label>
+            <select id="filterDimension" class="w-full rounded-lg border border-slate-300 px-3 py-1.5 text-xs sm:text-sm bg-white">
+              <option value="all">All 10 Dimensions</option>
+            </select>
+          </div>
+          <div>
+            <label for="filterPriority" class="block text-xs font-medium text-slate-600 mb-1">Priority Tier (P1–P4)</label>
+            <select id="filterPriority" class="w-full rounded-lg border border-slate-300 px-3 py-1.5 text-xs sm:text-sm bg-white">
+              <option value="all">All Priorities (P1–P4)</option>
+              <option value="P1">P1 — Critical (Must do)</option>
+              <option value="P2">P2 — Growth (Must build)</option>
+              <option value="P3">P3 — Exploration (Should try)</option>
+              <option value="P4">P4 — Maintenance (Keep organized)</option>
+            </select>
+          </div>
+          <div>
+            <label for="filterStatus" class="block text-xs font-medium text-slate-600 mb-1">Completion Status</label>
+            <select id="filterStatus" class="w-full rounded-lg border border-slate-300 px-3 py-1.5 text-xs sm:text-sm bg-white">
+              <option value="all">All Items</option>
+              <option value="active">Active / Pending Only</option>
+              <option value="completed">Completed Only</option>
+            </select>
+          </div>
+          <div>
+            <label for="filterSearch" class="block text-xs font-medium text-slate-600 mb-1">Search Keyword</label>
+            <input type="text" id="filterSearch" placeholder="Filter goals or actions..." class="w-full rounded-lg border border-slate-300 px-3 py-1.5 text-xs sm:text-sm" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Priority Distribution Summary Pills -->
+      <div id="priorityBreakdownPills" class="grid grid-cols-2 sm:grid-cols-4 gap-3"></div>
+
+      <!-- Level 2: 90-Day Outcomes / Goals -->
+      <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5 space-y-4">
+        <div class="flex items-center justify-between">
+          <div>
+            <h3 class="text-sm sm:text-base font-bold text-slate-900">Level 2: 90-Day Quarterly Outcomes &amp; Goals</h3>
+            <p class="text-xs text-slate-500">Adjust progress sliders as milestones advance</p>
+          </div>
+          <span id="goalsCountBadge" class="text-xs font-semibold text-slate-500"></span>
+        </div>
+        <div id="goalsListContainer" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+      </div>
+
+      <!-- Level 4: Concrete Actions / Tasks -->
+      <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5 space-y-4">
+        <div class="flex items-center justify-between">
+          <div>
+            <h3 class="text-sm sm:text-base font-bold text-slate-900">Level 4: Concrete Actions &amp; Tasks</h3>
+            <p class="text-xs text-slate-500">Pin items to Today's Daily 3 or check them off to log 7-day activity</p>
+          </div>
+          <span id="tasksCountBadge" class="text-xs font-semibold text-slate-500"></span>
+        </div>
+        <div id="tasksListContainer" class="space-y-2.5"></div>
+      </div>
+    </section>
+
+    <!-- ==================== TAB 4: HABITS & STREAKS (v0.2) ==================== -->
+    <section id="tab-habits" class="tab-panel hidden space-y-6">
+      <div class="bg-white rounded-xl border border-slate-200 p-5 shadow-sm flex flex-wrap items-center justify-between gap-4">
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="px-2 py-0.5 text-xs font-bold rounded bg-indigo-100 text-indigo-800">v0.2 Upgrade</span>
+            <h2 class="text-base sm:text-lg font-bold text-slate-900">Level 3: Habit Tracker, Routines &amp; Completion Streaks</h2>
+          </div>
+          <p class="text-xs sm:text-sm text-slate-600 mt-1">
+            Track daily, weekday, weekend, or custom-day routines with streak counters, custom reminder times, and instant 7-day check-ins.
+          </p>
+        </div>
+        <div class="flex items-center gap-2">
+          <button type="button" id="btnEnableNotifications" class="px-3 py-1.5 rounded-lg bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-200 text-xs font-semibold transition">
+            Check Reminders
+          </button>
+          <button type="button" id="btnAddHabitModal" class="px-3.5 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-xs sm:text-sm font-semibold transition">
+            + New Habit / Routine
+          </button>
+        </div>
+      </div>
+
+      <div id="habitsCardsGrid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+    </section>
+
+    <!-- ==================== TAB 5: 7-DAY CALENDAR & ANALYTICS (v0.2) ==================== -->
+    <section id="tab-calendar" class="tab-panel hidden space-y-6">
+      <!-- 7-Day Interactive Matrix Card -->
+      <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+        <div class="p-5 border-b border-slate-200 flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h2 class="text-base sm:text-lg font-bold text-slate-900">7-Day Interactive Habit &amp; Task Matrix</h2>
+            <p class="text-xs text-slate-500">Click any cell to toggle completion for that date. Streaks and analytics update automatically.</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <button type="button" id="btnCalPrevWeek" class="px-3 py-1.5 rounded-lg border border-slate-200 hover:bg-slate-50 text-xs font-semibold text-slate-700">
+              ← Prev 7 Days
+            </button>
+            <button type="button" id="btnCalTodayWeek" class="px-3 py-1.5 rounded-lg bg-indigo-50 text-indigo-700 hover:bg-indigo-100 text-xs font-semibold">
+              Current 7 Days
+            </button>
+            <button type="button" id="btnCalNextWeek" class="px-3 py-1.5 rounded-lg border border-slate-200 hover:bg-slate-50 text-xs font-semibold text-slate-700">
+              Next 7 Days →
+            </button>
+          </div>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse text-xs sm:text-sm">
+            <thead id="calendarTableHead" class="bg-slate-50 text-slate-600 border-b border-slate-200"></thead>
+            <tbody id="calendarTableBody" class="divide-y divide-slate-100"></tbody>
+            <tfoot id="calendarTableFoot" class="bg-slate-50 font-semibold border-t border-slate-200"></tfoot>
+          </table>
+        </div>
+      </div>
+
+      <!-- Scheduled Tasks in Selected 7-Day Window -->
+      <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5 space-y-4">
+        <div class="flex items-center justify-between">
+          <div>
+            <h3 class="text-sm sm:text-base font-bold text-slate-900">Tasks Due Across This 7-Day Window</h3>
+            <p class="text-xs text-slate-500" id="calendarWindowLabel"></p>
+          </div>
+        </div>
+        <div id="calendarWeekTasksGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-7 gap-3"></div>
+      </div>
+
+      <!-- Analytics Charts Row -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5">
+          <h3 class="text-sm sm:text-base font-bold text-slate-900">Dimension Attention Score vs. 7-Day Activity</h3>
+          <p class="text-xs text-slate-500 mb-4">Identify gaps between how much attention an area needs (1–5) and actual completions</p>
+          <div class="relative h-72">
+            <canvas id="chartDimensionBalance"></canvas>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5">
+          <h3 class="text-sm sm:text-base font-bold text-slate-900">7-Day Daily Completion Trend</h3>
+          <p class="text-xs text-slate-500 mb-4">Combined daily habits checked off and concrete tasks completed</p>
+          <div class="relative h-72">
+            <canvas id="chartWeeklyTrend"></canvas>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== TAB 6: SUNDAY WEEKLY REVIEW ==================== -->
+    <section id="tab-review" class="tab-panel hidden space-y-6">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <!-- 5 Core System Rules Audit -->
+        <div class="lg:col-span-5 bg-white rounded-xl border border-slate-200 shadow-sm p-5 space-y-4">
+          <div>
+            <h2 class="text-base font-bold text-slate-900">5 Core Rules Health Check</h2>
+            <p class="text-xs text-slate-500">Automated audit of your Personal Life OS setup</p>
+          </div>
+          <div id="reviewRulesChecklist" class="space-y-3"></div>
+        </div>
+
+        <!-- Weekly Reflection Form & Log -->
+        <div class="lg:col-span-7 bg-white rounded-xl border border-slate-200 shadow-sm p-5 space-y-4">
+          <div>
+            <h2 class="text-base font-bold text-slate-900">Sunday Weekly Reflection Log</h2>
+            <p class="text-xs text-slate-500">Review the past 7 days and lock in your top 5–7 actions for the coming week</p>
+          </div>
+
+          <div class="space-y-3">
+            <div>
+              <label for="reviewWinsInput" class="block text-xs font-semibold text-slate-700 mb-1">1. Key Wins &amp; Moments of Gratitude This Week</label>
+              <textarea id="reviewWinsInput" rows="2" placeholder="e.g., Completed 5 days of vocal practice, progressed on 2BHK electrical layout, family outing..." class="w-full rounded-lg border border-slate-300 px-3 py-2 text-xs sm:text-sm"></textarea>
+            </div>
+            <div>
+              <label for="reviewBlockersInput" class="block text-xs font-semibold text-slate-700 mb-1">2. Bottlenecks or Neglected Dimensions</label>
+              <textarea id="reviewBlockersInput" rows="2" placeholder="e.g., Late evening work calls cut into sleep schedule..." class="w-full rounded-lg border border-slate-300 px-3 py-2 text-xs sm:text-sm"></textarea>
+            </div>
+            <div>
+              <label for="reviewNextFocusInput" class="block text-xs font-semibold text-slate-700 mb-1">3. Top 5–7 Priorities for Next Week</label>
+              <textarea id="reviewNextFocusInput" rows="2" placeholder="e.g., Finalize LangGraph prototype, book Ritisha's robotics practice slot, review SIP allocation..." class="w-full rounded-lg border border-slate-300 px-3 py-2 text-xs sm:text-sm"></textarea>
+            </div>
+            <div class="flex justify-end">
+              <button type="button" id="btnSaveWeeklyReview" class="px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-xs sm:text-sm font-semibold transition">
+                Save Weekly Reflection
+              </button>
+            </div>
+          </div>
+
+          <div class="pt-4 border-t border-slate-200 space-y-3">
+            <h3 class="text-xs font-bold uppercase tracking-wider text-slate-500">Past Weekly Reflections</h3>
+            <div id="pastReviewsList" class="space-y-2.5 max-h-64 overflow-y-auto custom-scrollbar"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== TAB 7: v0.3 SMART PRIORITIZER & LONG-TERM ANALYTICS ==================== -->
+    <section id="tab-v03analytics" class="tab-panel hidden space-y-6">
+      <!-- v0.3 Header Banner & KPI Row -->
+      <div class="bg-gradient-to-r from-indigo-900 via-indigo-800 to-slate-900 rounded-2xl p-5 sm:p-6 text-white shadow-sm space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="px-2.5 py-0.5 text-xs font-bold uppercase tracking-wider rounded-full bg-emerald-400/20 text-emerald-300 border border-emerald-400/30">v0.3 Intelligence Engine</span>
+              <h2 class="text-base sm:text-lg font-bold">Automated Prioritization &amp; Long-Term Progress Analytics</h2>
+            </div>
+            <p class="text-xs sm:text-sm text-indigo-100/90 mt-1">
+              Synthesizes your 10-Dimension attention scores, 90-day focus flags, P1–P4 urgency weights, due dates, and 7-day neglect signals into concrete next actions and multi-quarter trajectory metrics.
+            </p>
+          </div>
+          <button type="button" id="btnApplyAllSmartRecs" class="px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs sm:text-sm transition shadow-sm">
+            ⚡ Auto-Optimize Today's Daily 3
+          </button>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
+          <div class="bg-white/10 backdrop-blur-xs rounded-xl p-3.5 border border-white/10">
+            <div class="text-xs text-indigo-200 font-medium">Life Harmony &amp; Alignment Index</div>
+            <div class="mt-1 flex items-baseline justify-between">
+              <span id="v03HarmonyScore" class="text-2xl font-bold text-white">0%</span>
+              <span id="v03HarmonyBadge" class="text-xs font-semibold px-2 py-0.5 rounded bg-emerald-400/20 text-emerald-200">Balanced</span>
+            </div>
+            <p class="text-[11px] text-indigo-200/80 mt-1">Weighted match between high-need areas &amp; output</p>
+          </div>
+
+          <div class="bg-white/10 backdrop-blur-xs rounded-xl p-3.5 border border-white/10">
+            <div class="text-xs text-indigo-200 font-medium">90-Day Quarterly Outcome Velocity</div>
+            <div class="mt-1 flex items-baseline justify-between">
+              <span id="v03GoalVelocity" class="text-2xl font-bold text-emerald-300">0%</span>
+              <span id="v03GoalCountTag" class="text-xs font-semibold px-2 py-0.5 rounded bg-indigo-400/20 text-indigo-100">0 Outcomes</span>
+            </div>
+            <p class="text-[11px] text-indigo-200/80 mt-1">Average milestone completion across Level 2 goals</p>
+          </div>
+
+          <div class="bg-white/10 backdrop-blur-xs rounded-xl p-3.5 border border-white/10">
+            <div class="text-xs text-indigo-200 font-medium">Top Recommended Focus Area</div>
+            <div class="mt-1 flex items-baseline justify-between">
+              <span id="v03TopRecommendedDim" class="text-sm sm:text-base font-bold text-amber-300 truncate">—</span>
+            </div>
+            <p id="v03TopRecommendedReason" class="text-[11px] text-indigo-200/80 mt-1">Highest urgency-to-activity gap</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Smart Prioritization Recommendations & Ranked Action Queue -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <!-- Left: AI / Rule-Based Strategic Recommendations -->
+        <div class="lg:col-span-5 bg-white rounded-xl border border-slate-200 shadow-sm p-5 space-y-4">
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="text-sm sm:text-base font-bold text-slate-900">Smart Rebalancing Recommendations</h3>
+              <p class="text-xs text-slate-500">One-click adjustments detected from your current scores &amp; logs</p>
+            </div>
+          </div>
+          <div id="v03SmartInsightsList" class="space-y-3"></div>
+        </div>
+
+        <!-- Right: Ranked Priority Score Queue (0-100 Urgency Index) -->
+        <div class="lg:col-span-7 bg-white rounded-xl border border-slate-200 shadow-sm p-5 space-y-4">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <div>
+              <h3 class="text-sm sm:text-base font-bold text-slate-900">Automated Priority Queue (Urgency Score 0–100)</h3>
+              <p class="text-xs text-slate-500">Formula: Dimension Score (×10) + 90d Focus (+15) + Tier Weight (P1–P4) + Due/Neglect Boost</p>
+            </div>
+            <select id="v03QueueBucketFilter" class="rounded-lg border border-slate-300 px-2.5 py-1 text-xs bg-white font-medium">
+              <option value="all">All Daily 3 Buckets</option>
+              <option value="responsibility">1. Responsibility Only</option>
+              <option value="growth">2. Growth &amp; Health Only</option>
+              <option value="family">3. Family &amp; Happiness Only</option>
+            </select>
+          </div>
+          <div id="v03RankedQueueList" class="space-y-2.5 max-h-96 overflow-y-auto custom-scrollbar pr-1"></div>
+        </div>
+      </div>
+
+      <!-- Long-Term Analytics Charts Row (v0.3) -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- Chart 1: 10-Dimension Multi-Metric Radar -->
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5">
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+            <div>
+              <h3 class="text-sm sm:text-base font-bold text-slate-900">10-Dimension Long-Term Balance Radar</h3>
+              <p class="text-xs text-slate-500">Compares Attention Needed vs. 90-Day Goal Progress &amp; Habit/Task Momentum</p>
+            </div>
+          </div>
+          <div class="relative h-72">
+            <canvas id="chartV03Radar"></canvas>
+          </div>
+        </div>
+
+        <!-- Chart 2: Long-Term Quarterly Goal Progress & Priority Mix -->
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5">
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+            <div>
+              <h3 class="text-sm sm:text-base font-bold text-slate-900">Quarterly Outcome Progress &amp; P1–P4 Workload</h3>
+              <p class="text-xs text-slate-500">Switch between 90-Day Goal completion by area and P1–P4 execution breakdown</p>
+            </div>
+            <select id="v03ChartModeSelect" class="rounded-lg border border-slate-300 px-2.5 py-1 text-xs bg-white font-medium">
+              <option value="goals">90-Day Outcomes Progress (%)</option>
+              <option value="priorities">P1–P4 Priority Tier Execution</option>
+            </select>
+          </div>
+          <div class="relative h-72">
+            <canvas id="chartV03LongTerm"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Interactive Weekly Capacity & 90-Day Velocity Simulator -->
+      <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5 space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h3 class="text-sm sm:text-base font-bold text-slate-900">90-Day Time Allocation &amp; Outcome Pacing Simulator</h3>
+            <p class="text-xs text-slate-500">Adjust your weekly focused hours (outside core office hours) to model recommended time budgets across P1–P4 tiers</p>
+          </div>
+          <div class="flex items-center gap-2 bg-indigo-50 px-3 py-1.5 rounded-lg border border-indigo-200">
+            <label for="v03WeeklyHoursSlider" class="text-xs font-semibold text-indigo-900">Weekly Focused Hours:</label>
+            <input type="range" id="v03WeeklyHoursSlider" min="6" max="35" step="1" value="16" class="w-28 accent-indigo-600 cursor-pointer" />
+            <span id="v03WeeklyHoursReadout" class="text-xs font-bold text-indigo-700">16 hrs/wk</span>
+          </div>
+        </div>
+        <div id="v03CapacityBreakdownGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3"></div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ==================== MODAL 1: QUICK ADD / EDIT TASK OR GOAL OR HABIT ==================== -->
+  <div id="itemModal" class="fixed inset-0 z-50 hidden bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-xl border border-slate-200 space-y-4 max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <h3 id="itemModalTitle" class="text-base font-bold text-slate-900">Add Item to Personal Life OS</h3>
+        <button type="button" id="btnCloseItemModal" class="text-slate-400 hover:text-slate-600 text-sm font-bold px-2 py-1">✕</button>
+      </div>
+
+      <!-- Entity Type Selector -->
+      <div>
+        <label for="modalEntityType" class="block text-xs font-semibold text-slate-700 mb-1">Hierarchy Item Type</label>
+        <select id="modalEntityType" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-xs sm:text-sm bg-slate-50 font-medium">
+          <option value="task">Level 4: Concrete Action / Task</option>
+          <option value="goal">Level 2: 90-Day Quarterly Outcome / Goal</option>
+          <option value="habit">Level 3: Recurring Habit / Routine (v0.2)</option>
+        </select>
+      </div>
+
+      <div class="space-y-3">
+        <div>
+          <label for="modalTitleInput" class="block text-xs font-semibold text-slate-700 mb-1">Title / Description</label>
+          <input type="text" id="modalTitleInput" placeholder="Enter clear, concrete description..." class="w-full rounded-lg border border-slate-300 px-3 py-2 text-xs sm:text-sm" />
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label for="modalDimensionInput" class="block text-xs font-semibold text-slate-700 mb-1">Life Dimension (Level 1)</label>
+            <select id="modalDimensionInput" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-xs sm:text-sm bg-white"></select>
+          </div>
+          <div>
+            <label for="modalPriorityInput" class="block text-xs font-semibold text-slate-700 mb-1">Priority Tier (P1–P4)</label>
+            <select id="modalPriorityInput" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-xs sm:text-sm bg-white">
+              <option value="P1">P1 — Critical (Must do)</option>
+              <option value="P2">P2 — Growth (Must build)</option>
+              <option value="P3">P3 — Exploration (Should try)</option>
+              <option value="P4">P4 — Maintenance (Keep organized)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Task-Specific Fields -->
+        <div id="modalTaskFields" class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+          <div>
+            <label for="modalTaskDueInput" class="block text-xs font-semibold text-slate-700 mb-1">Target / Due Date</label>
+            <input type="date" id="modalTaskDueInput" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-xs sm:text-sm" />
+          </div>
+          <div>
+            <label for="modalTaskDailySlot" class="block text-xs font-semibold text-slate-700 mb-1">Daily 3 Bucket</label>
+            <select id="modalTaskDailySlot" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-xs sm:text-sm bg-white">
+              <option value="responsibility">1. Responsibility (Work/Admin/Finance)</option>
+              <option value="growth">2. Growth &amp; Health (Fitness/Skills)</option>
+              <option value="family">3. Family &amp; Happiness (Kids/Spouse/Joy)</option>
+            </select>
+          </div>
+          <div class="sm:col-span-2 flex items-center gap-2 pt-1">
+            <input type="checkbox" id="modalTaskPinDaily3" class="rounded border-slate-300 text-indigo-600" />
+            <label for="modalTaskPinDaily3" class="text-xs font-medium text-slate-700">Pin to Today's Daily 3 Focus Card</label>
+          </div>
+        </div>
+
+        <!-- Goal-Specific Fields -->
+        <div id="modalGoalFields" class="hidden grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+          <div>
+            <label for="modalGoalQuarterInput" class="block text-xs font-semibold text-slate-700 mb-1">Target Quarter</label>
+            <input type="text" id="modalGoalQuarterInput" value="Q4 2026 (90-Day Focus)" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-xs sm:text-sm" />
+          </div>
+          <div>
+            <label for="modalGoalProgressInput" class="block text-xs font-semibold text-slate-700 mb-1">Initial Progress (%)</label>
+            <input type="number" id="modalGoalProgressInput" min="0" max="100" value="25" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-xs sm:text-sm" />
+          </div>
+        </div>
+
+        <!-- Habit-Specific Fields (v0.2) -->
+        <div id="modalHabitFields" class="hidden space-y-3 pt-1">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label for="modalHabitFreqInput" class="block text-xs font-semibold text-slate-700 mb-1">Schedule Frequency</label>
+              <select id="modalHabitFreqInput" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-xs sm:text-sm bg-white">
+                <option value="daily">Every Day (7 days/wk)</option>
+                <option value="weekdays">Weekdays (Mon–Fri)</option>
+                <option value="weekends">Weekends (Sat–Sun)</option>
+                <option value="custom">Selected Days of Week</option>
+              </select>
+            </div>
+            <div>
+              <label for="modalHabitReminderInput" class="block text-xs font-semibold text-slate-700 mb-1">Reminder Time (v0.2)</label>
+              <input type="time" id="modalHabitReminderInput" value="07:00" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-xs sm:text-sm" />
+            </div>
+          </div>
+
+          <div id="modalHabitCustomDaysRow" class="hidden">
+            <span class="block text-xs font-semibold text-slate-700 mb-1.5">Select Active Days</span>
+            <div class="flex flex-wrap gap-1.5">
+              <label class="inline-flex items-center gap-1 px-2.5 py-1 rounded border border-slate-200 text-xs cursor-pointer"><input type="checkbox" value="1" class="habit-day-cb" checked /> Mon</label>
+              <label class="inline-flex items-center gap-1 px-2.5 py-1 rounded border border-slate-200 text-xs cursor-pointer"><input type="checkbox" value="2" class="habit-day-cb" checked /> Tue</label>
+              <label class="inline-flex items-center gap-1 px-2.5 py-1 rounded border border-slate-200 text-xs cursor-pointer"><input type="checkbox" value="3" class="habit-day-cb" checked /> Wed</label>
+              <label class="inline-flex items-center gap-1 px-2.5 py-1 rounded border border-slate-200 text-xs cursor-pointer"><input type="checkbox" value="4" class="habit-day-cb" checked /> Thu</label>
+              <label class="inline-flex items-center gap-1 px-2.5 py-1 rounded border border-slate-200 text-xs cursor-pointer"><input type="checkbox" value="5" class="habit-day-cb" checked /> Fri</label>
+              <label class="inline-flex items-center gap-1 px-2.5 py-1 rounded border border-slate-200 text-xs cursor-pointer"><input type="checkbox" value="6" class="habit-day-cb" /> Sat</label>
+              <label class="inline-flex items-center gap-1 px-2.5 py-1 rounded border border-slate-200 text-xs cursor-pointer"><input type="checkbox" value="0" class="habit-day-cb" /> Sun</label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-end gap-2 pt-3 border-t border-slate-100">
+        <button type="button" id="btnCancelItemModal" class="px-4 py-2 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 text-xs sm:text-sm font-medium">Cancel</button>
+        <button type="button" id="btnSaveItemModal" class="px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-xs sm:text-sm font-semibold">Save Item</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== MODAL 2: JSON IMPORT / EXPORT & CLOUD SYNC ==================== -->
+  <div id="syncModal" class="fixed inset-0 z-50 hidden bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-2xl w-full p-6 shadow-xl border border-slate-200 space-y-5 max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <div>
+          <h3 class="text-base font-bold text-slate-900">JSON Backup, Restore &amp; Cross-Device Sync</h3>
+          <p class="text-xs text-slate-500">Local-first IndexedDB/LocalStorage state with portable JSON and Firebase/Drive sync support</p>
+        </div>
+        <button type="button" id="btnCloseSyncModal" class="text-slate-400 hover:text-slate-600 text-sm font-bold px-2 py-1">✕</button>
+      </div>
+
+      <!-- Export & Import Actions -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2.5">
+          <h4 class="text-xs font-bold uppercase tracking-wider text-slate-700">Export Backup (v0.2 Schema)</h4>
+          <p class="text-xs text-slate-600">Download your complete 10-dimension scores, goals, P1–P4 tasks, habit streaks, and reflections as a JSON file.</p>
+          <div class="flex flex-wrap gap-2 pt-1">
+            <button type="button" id="btnDownloadJson" class="px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold">
+              Download .JSON File
+            </button>
+            <button type="button" id="btnCopyJsonClipboard" class="px-3 py-1.5 rounded-lg bg-white hover:bg-slate-100 text-slate-700 border border-slate-300 text-xs font-semibold">
+              Copy JSON to Clipboard
+            </button>
+          </div>
+        </div>
+
+        <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2.5">
+          <h4 class="text-xs font-bold uppercase tracking-wider text-slate-700">Import / Restore JSON</h4>
+          <p class="text-xs text-slate-600">Upload a previously exported `.json` backup file from your laptop or Android device.</p>
+          <div class="pt-1">
+            <input type="file" id="inputJsonFile" accept=".json,application/json" class="block w-full text-xs text-slate-600 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-slate-900 file:text-white hover:file:bg-slate-800" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Direct JSON Inspector / Paste Box -->
+      <div class="space-y-2">
+        <div class="flex items-center justify-between">
+          <label for="jsonPasteTextarea" class="text-xs font-semibold text-slate-700">Live JSON Payload (Paste JSON here to restore or inspect)</label>
+          <button type="button" id="btnApplyPastedJson" class="text-xs font-semibold text-indigo-600 hover:underline">Apply Pasted JSON</button>
+        </div>
+        <textarea id="jsonPasteTextarea" rows="5" class="w-full font-mono text-xs rounded-lg border border-slate-300 p-2.5 bg-slate-900 text-emerald-400"></textarea>
+      </div>
+
+      <!-- Optional Cloud Sync Endpoint (Firebase / Google Apps Script Drive Endpoint) -->
+      <div class="p-4 rounded-xl bg-indigo-50/60 border border-indigo-200 space-y-3">
+        <div class="flex items-center justify-between">
+          <h4 class="text-xs font-bold uppercase tracking-wider text-indigo-900">Cross-Device Cloud Sync (Firebase REST / Google Drive Web App URL)</h4>
+          <span id="syncEndpointStatus" class="text-xs font-medium text-indigo-700">Local-First Mode</span>
+        </div>
+        <p class="text-xs text-indigo-900/80">
+          To sync automatically between your Android phone (installed via Chrome <em>"Add to Home screen"</em>) and your laptop browser, paste a Firebase Realtime DB URL (ending in <code>/lifeos.json</code>) or Google Apps Script Web App URL:
+        </p>
+        <div class="flex flex-wrap sm:flex-nowrap gap-2">
+          <input type="url" id="inputCloudSyncUrl" placeholder="https://script.google.com/macros/s/YOUR_DEPLOYMENT_ID/exec" class="flex-1 rounded-lg border border-indigo-200 px-3 py-1.5 text-xs bg-white" />
+          <button type="button" id="btnSaveSyncUrl" class="px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold whitespace-nowrap">Save Endpoint</button>
+        </div>
+        <div class="flex flex-wrap items-center justify-between gap-2 pt-1">
+          <div class="flex flex-wrap items-center gap-2">
+            <button type="button" id="btnPushCloudNow" class="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold">
+              ↑ Push to Google Drive Now
+            </button>
+            <button type="button" id="btnPullCloudNow" class="px-3 py-1.5 rounded-lg bg-white hover:bg-indigo-50 text-indigo-800 border border-indigo-200 text-xs font-semibold">
+              ↓ Pull from Google Drive
+            </button>
+          </div>
+          <label class="inline-flex items-center gap-1.5 text-xs font-medium text-indigo-950 cursor-pointer">
+            <input type="checkbox" id="cbAutoCloudSync" class="rounded border-indigo-300 text-indigo-600" />
+            <span>Auto-push to Drive on changes</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Reset Factory Defaults -->
+      <div class="flex items-center justify-between pt-3 border-t border-slate-200">
+        <div class="flex items-center gap-2">
+          <button type="button" id="btnRequestReset" class="px-3 py-1.5 rounded-lg border border-rose-200 text-rose-700 hover:bg-rose-50 text-xs font-semibold">
+            Reset to Default Starter Data
+          </button>
+          <div id="confirmResetInline" class="hidden flex items-center gap-2">
+            <span class="text-xs text-rose-700 font-medium">Confirm reset?</span>
+            <button type="button" id="btnConfirmResetYes" class="px-2.5 py-1 rounded bg-rose-600 text-white text-xs font-bold">Yes, Reset</button>
+            <button type="button" id="btnConfirmResetNo" class="px-2.5 py-1 rounded bg-slate-200 text-slate-700 text-xs font-semibold">Cancel</button>
+          </div>
+        </div>
+        <button type="button" id="btnCloseSyncModalBottom" class="px-4 py-1.5 rounded-lg bg-slate-900 text-white text-xs font-semibold">Done</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toastContainer" class="fixed bottom-4 right-4 z-50 hidden">
+    <div class="bg-slate-900 text-white px-4 py-2.5 rounded-xl shadow-lg border border-slate-700 text-xs sm:text-sm font-medium flex items-center gap-2">
+      <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+      <span id="toastMessage">Saved!</span>
+    </div>
+  </div>
+
+  <script>
+    // =========================================================================
+    // PERSONAL LIFE OS v0.2 — STATE & DEFAULT DATA
+    // =========================================================================
+    const STORAGE_KEY = 'personal_life_os_v0_2_state_v1';
+
+    function formatDateKey(dateObj) {
+      const y = dateObj.getFullYear();
+      const m = String(dateObj.getMonth() + 1).padStart(2, '0');
+      const d = String(dateObj.getDate()).padStart(2, '0');
+      return `${y}-${m}-${d}`;
+    }
+
+    function addDays(dateObj, days) {
+      const copy = new Date(dateObj.getTime());
+      copy.setDate(copy.getDate() + days);
+      return copy;
+    }
+
+    const TODAY_DATE = new Date();
+    const TODAY_KEY = formatDateKey(TODAY_DATE);
+
+    const PRIORITY_META = {
+      P1: { label: 'P1 Critical', desc: 'Must do — Urgent health, family, core work/finance', badgeClass: 'bg-rose-100 text-rose-800 border-rose-200' },
+      P2: { label: 'P2 Growth', desc: 'Must build — Career, kids training, fitness, wealth', badgeClass: 'bg-indigo-100 text-indigo-800 border-indigo-200' },
+      P3: { label: 'P3 Exploration', desc: 'Should try — Business ideas, hobbies, road trips', badgeClass: 'bg-amber-100 text-amber-800 border-amber-200' },
+      P4: { label: 'P4 Maintenance', desc: 'Keep organized — Home routines, errands, admin', badgeClass: 'bg-slate-100 text-slate-700 border-slate-200' }
+    };
+
+    function createDefaultState() {
+      const d0 = TODAY_KEY;
+      const dMinus1 = formatDateKey(addDays(TODAY_DATE, -1));
+      const dMinus2 = formatDateKey(addDays(TODAY_DATE, -2));
+      const dMinus3 = formatDateKey(addDays(TODAY_DATE, -3));
+      const dPlus1 = formatDateKey(addDays(TODAY_DATE, 1));
+      const dPlus2 = formatDateKey(addDays(TODAY_DATE, 2));
+      const dPlus3 = formatDateKey(addDays(TODAY_DATE, 3));
+
+      return {
+        version: '0.2',
+        syncEndpointUrl: '',
+        calendarOffsetDays: 0,
+        dimensions: [
+          {
+            id: 'health',
+            name: '1. Health & Fitness',
+            subtitle: 'Personal & family health, stamina, workouts, sleep quality',
+            color: '#10b981',
+            score: 5,
+            isQuarterlyFocus: true,
+            primaryOutcome: 'Build consistent 45-min morning workout + family preventive checkups',
+            nextAction: 'Complete 30-min brisk walk + core mobility routine at 6:30 AM'
+          },
+          {
+            id: 'family',
+            name: '2. Family & Parenting',
+            subtitle: 'Spouse bonding, kids training (robotics, riddles, values), quality time',
+            color: '#f43f5e',
+            score: 5,
+            isQuarterlyFocus: true,
+            primaryOutcome: 'Guided weekend STEM/robotics & riddle sessions + dedicated family evenings',
+            nextAction: 'Do 20-minute evening riddle & robotics brainstorming session with kids'
+          },
+          {
+            id: 'relationships',
+            name: '3. Relationships & Social',
+            subtitle: 'Extended family, close friends, community connections',
+            color: '#ec4899',
+            score: 2,
+            isQuarterlyFocus: false,
+            primaryOutcome: 'Maintain warm weekly touchpoints with parents and close friends',
+            nextAction: 'Call parents on Sunday evening for 20-minute catch-up'
+          },
+          {
+            id: 'career',
+            name: '4. Career & Work',
+            subtitle: 'Full-stack architecture, AI/Agentic engineering transition, leadership',
+            color: '#4f46e5',
+            score: 5,
+            isQuarterlyFocus: true,
+            primaryOutcome: 'Transition into AI Architecture & Agentic AI systems alongside Java/Spring Boot',
+            nextAction: 'Build multi-agent orchestration module with Spring AI & LangGraph'
+          },
+          {
+            id: 'finance',
+            name: '5. Finance & Wealth',
+            subtitle: 'Tax-optimized salary structure, MF/PPF/NPS portfolio, property tracking',
+            color: '#0ea5e9',
+            score: 4,
+            isQuarterlyFocus: true,
+            primaryOutcome: 'Automate non-demat SIPs, NPS/PPF tax optimization & property refund follow-up',
+            nextAction: 'Review monthly mutual fund SIP step-up and stamp duty refund status'
+          },
+          {
+            id: 'development',
+            name: '6. Personal Development',
+            subtitle: 'Python/AI mastery, system design books, structured learning',
+            color: '#8b5cf6',
+            score: 4,
+            isQuarterlyFocus: false,
+            primaryOutcome: 'Complete 45 mins daily deep learning in Agentic AI & cloud patterns',
+            nextAction: 'Read 1 chapter on LLM evaluation & summarize architectural notes'
+          },
+          {
+            id: 'spirituality',
+            name: '7. Spirituality & Purpose',
+            subtitle: 'Inner peace, mindfulness, gratitude, core life values',
+            color: '#14b8a6',
+            score: 3,
+            isQuarterlyFocus: false,
+            primaryOutcome: '10-minute morning mindfulness and evening gratitude reflection',
+            nextAction: 'Practice 10 minutes of quiet breathing before opening laptop'
+          },
+          {
+            id: 'hobbies',
+            name: '8. Happiness & Hobbies',
+            subtitle: 'Hindi vocal singing practice, interior woodwork design, creative joy',
+            color: '#f59e0b',
+            score: 3,
+            isQuarterlyFocus: false,
+            primaryOutcome: 'Improve vocal pitch accuracy & rhythm on continuous-rhythm Hindi tracks',
+            nextAction: '15-minute vocal warm-up and pitch practice on romantic Hindi melody'
+          },
+          {
+            id: 'exploration',
+            name: '9. Exploration & Experiences',
+            subtitle: 'Business/SaaS micro-experiments, Maharashtra road trips, new experiences',
+            color: '#f97316',
+            score: 4,
+            isQuarterlyFocus: false,
+            primaryOutcome: 'Prototype 1 India-focused micro-SaaS problem & plan family weekend getaway',
+            nextAction: 'Shortlist top 2 healthcare/supply-chain AI problem statements for MVP'
+          },
+          {
+            id: 'management',
+            name: '10. Life Management',
+            subtitle: '2BHK flat civil/electrical/modular interior setup, routines, household admin',
+            color: '#64748b',
+            score: 4,
+            isQuarterlyFocus: true,
+            primaryOutcome: 'Execute 2BHK electrical point layout, AC piping & modular furniture checklist',
+            nextAction: 'Verify AC outdoor unit service access & wall paint shade cards on site'
+          }
+        ],
+        goals: [
+          { id: 'g1', dimensionId: 'career', title: 'Ship 2 production-grade Agentic AI prototypes (Spring AI + LangGraph)', priority: 'P1', quarter: 'Q4 2026', progress: 45 },
+          { id: 'g2', dimensionId: 'health', title: 'Achieve 5x/week workout consistency & complete family health checkup', priority: 'P1', quarter: 'Q4 2026', progress: 60 },
+          { id: 'g3', dimensionId: 'family', title: 'Complete 12 weekend kids coaching sessions (robotics, riddles & short videos)', priority: 'P2', quarter: 'Q4 2026', progress: 50 },
+          { id: 'g4', dimensionId: 'finance', title: 'Optimize ₹30L new-regime tax buckets (NPS/EPF) & track property refund closure', priority: 'P1', quarter: 'Q4 2026', progress: 70 },
+          { id: 'g5', dimensionId: 'management', title: 'Complete 2BHK flat electrical, AC installation & modular woodwork phase', priority: 'P2', quarter: 'Q4 2026', progress: 40 },
+          { id: 'g6', dimensionId: 'exploration', title: 'Validate 1 high-potential AI business opportunity from weekly problem tracker', priority: 'P3', quarter: 'Q4 2026', progress: 25 }
+        ],
+        tasks: [
+          { id: 't1', dimensionId: 'finance', title: 'Verify stamp duty refund status & update compliance log', priority: 'P1', dueDate: d0, dailySlot: 'responsibility', pinnedDaily3: true, completed: false, completedDate: null },
+          { id: 't2', dimensionId: 'career', title: 'Implement state-graph persistence in LangGraph + Spring Boot service', priority: 'P2', dueDate: d0, dailySlot: 'growth', pinnedDaily3: true, completed: false, completedDate: null },
+          { id: 't3', dimensionId: 'family', title: 'Evening riddle challenge & robotics kit session with Ritisha and Akaay', priority: 'P2', dueDate: d0, dailySlot: 'family', pinnedDaily3: true, completed: false, completedDate: null },
+          { id: 't4', dimensionId: 'management', title: 'Finalize 1-ton AC outdoor unit mounting bracket clearance for 2BHK flat', priority: 'P1', dueDate: dPlus1, dailySlot: 'responsibility', pinnedDaily3: false, completed: false, completedDate: null },
+          { id: 't5', dimensionId: 'health', title: 'Schedule annual family dental and vitamin profile screening', priority: 'P1', dueDate: dPlus2, dailySlot: 'growth', pinnedDaily3: false, completed: false, completedDate: null },
+          { id: 't6', dimensionId: 'exploration', title: 'Evaluate top 3 healthcare RCM / ambient clinical AI startup ideas', priority: 'P3', dueDate: dPlus3, dailySlot: 'growth', pinnedDaily3: false, completed: false, completedDate: null },
+          { id: 't7', dimensionId: 'management', title: 'Check car key fob CR2032 battery replacement & spare remote sync', priority: 'P4', dueDate: dMinus1, dailySlot: 'responsibility', pinnedDaily3: false, completed: true, completedDate: dMinus1 }
+        ],
+        habits: [
+          {
+            id: 'h1',
+            dimensionId: 'health',
+            title: '35-min Morning Brisk Walk & Mobility Training',
+            priority: 'P1',
+            frequency: 'daily',
+            customDays: [0, 1, 2, 3, 4, 5, 6],
+            reminderTime: '06:30',
+            history: { [dMinus3]: true, [dMinus2]: true, [dMinus1]: true }
+          },
+          {
+            id: 'h2',
+            dimensionId: 'development',
+            title: '45-min Agentic AI / Python Deep Work Block',
+            priority: 'P2',
+            frequency: 'weekdays',
+            customDays: [1, 2, 3, 4, 5],
+            reminderTime: '08:00',
+            history: { [dMinus3]: true, [dMinus2]: true, [dMinus1]: true }
+          },
+          {
+            id: 'h3',
+            dimensionId: 'family',
+            title: '20-min Kids Learning, Riddles & Story Connection',
+            priority: 'P1',
+            frequency: 'daily',
+            customDays: [0, 1, 2, 3, 4, 5, 6],
+            reminderTime: '20:30',
+            history: { [dMinus2]: true, [dMinus1]: true }
+          },
+          {
+            id: 'h4',
+            dimensionId: 'hobbies',
+            title: '15-min Hindi Vocal Singing & Pitch Practice',
+            priority: 'P3',
+            frequency: 'custom',
+            customDays: [2, 4, 6, 0],
+            reminderTime: '21:15',
+            history: { [dMinus2]: true }
+          },
+          {
+            id: 'h5',
+            dimensionId: 'spirituality',
+            title: '10-min Morning Breathing & Evening Gratitude Check',
+            priority: 'P2',
+            frequency: 'daily',
+            customDays: [0, 1, 2, 3, 4, 5, 6],
+            reminderTime: '06:00',
+            history: { [dMinus3]: true, [dMinus1]: true }
+          }
+        ],
+        reviews: [
+          {
+            id: 'rev-1',
+            date: dMinus3,
+            wins: 'Set up the 10-Dimension Personal Life OS structure; completed 3 consecutive morning walks and kids weekend activity.',
+            blockers: 'Need to keep active quarterly focus areas capped at 5 so evening learning stays protected.',
+            nextFocus: 'Advance Spring AI + LangGraph prototype, verify 2BHK electrical & AC points, maintain morning fitness streak.'
+          }
+        ]
+      };
+    }
+
+    let appState = loadState();
+    let chartDimensionInstance = null;
+    let chartWeeklyInstance = null;
+    let chartV03RadarInstance = null;
+    let chartV03LongTermInstance = null;
+
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (parsed && Array.isArray(parsed.dimensions) && Array.isArray(parsed.tasks) && Array.isArray(parsed.habits)) {
+            return parsed;
+          }
+        }
+      } catch (err) {
+        // Fallback to in-memory default state when localStorage is restricted
+      }
+      return createDefaultState();
+    }
+
+    function saveState(toastText) {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
+      } catch (err) {
+        // Ignore storage write errors in restricted iframes
+      }
+      if (toastText) {
+        showToast(toastText);
+      }
+      if (appState.autoCloudSync && appState.syncEndpointUrl) {
+        pushStateToCloud(true);
+      }
+    }
+
+    async function pushStateToCloud(silent) {
+      const url = (appState.syncEndpointUrl || '').trim();
+      if (!url) {
+        if (!silent) showToast('Paste and save your Google Apps Script /exec URL first');
+        return;
+      }
+      const statusEl = document.getElementById('syncEndpointStatus');
+      if (statusEl) statusEl.textContent = 'Syncing to Drive...';
+      try {
+        const res = await fetch(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({ state: appState }),
+          redirect: 'follow'
+        });
+        const data = await res.json();
+        if (data && data.ok === false) {
+          if (statusEl) statusEl.textContent = 'Sync Error';
+          if (!silent) showToast('Drive sync error: ' + (data.error || 'Unknown'));
+          return;
+        }
+        appState.lastCloudSyncAt = (data && data.lastUpdated) || new Date().toISOString();
+        if (statusEl) statusEl.textContent = 'Synced ✓';
+        if (!silent) showToast('State pushed to Google Drive!');
+      } catch (err) {
+        if (statusEl) statusEl.textContent = 'Sync Failed (Check URL)';
+        if (!silent) showToast('Could not reach Cloud Sync URL');
+      }
+    }
+
+    async function pullStateFromCloud() {
+      const url = (appState.syncEndpointUrl || '').trim();
+      if (!url) {
+        showToast('Paste and save your Google Apps Script /exec URL first');
+        return;
+      }
+      const statusEl = document.getElementById('syncEndpointStatus');
+      if (statusEl) statusEl.textContent = 'Pulling from Drive...';
+      try {
+        const res = await fetch(url, { method: 'GET', redirect: 'follow' });
+        const data = await res.json();
+        if (data && data.ok === false) {
+          if (statusEl) statusEl.textContent = 'Pull Error';
+          showToast('Drive error: ' + (data.error || 'Unknown'));
+          return;
+        }
+        const remoteState = (data && data.state && Array.isArray(data.state.dimensions)) ? data.state : data;
+        if (remoteState && Array.isArray(remoteState.dimensions) && Array.isArray(remoteState.tasks)) {
+          const keepUrl = appState.syncEndpointUrl;
+          const keepAuto = appState.autoCloudSync;
+          appState = remoteState;
+          appState.syncEndpointUrl = keepUrl;
+          appState.autoCloudSync = keepAuto;
+          try {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
+          } catch (e) {}
+          document.getElementById('jsonPasteTextarea').value = JSON.stringify(appState, null, 2);
+          if (statusEl) statusEl.textContent = 'Pulled Latest ✓';
+          showToast('State restored from Google Drive!');
+          renderAll();
+        } else {
+          if (statusEl) statusEl.textContent = 'No Drive File Yet';
+          showToast('No state file found in Drive yet — click Push first');
+        }
+      } catch (err) {
+        if (statusEl) statusEl.textContent = 'Pull Failed (Check URL)';
+        showToast('Could not pull from Cloud Sync URL');
+      }
+    }
+
+    function showToast(msg) {
+      const container = document.getElementById('toastContainer');
+      const textEl = document.getElementById('toastMessage');
+      if (!container || !textEl) return;
+      textEl.textContent = msg;
+      container.classList.remove('hidden');
+      if (window._toastTimer) clearTimeout(window._toastTimer);
+      window._toastTimer = setTimeout(() => {
+        container.classList.add('hidden');
+      }, 2600);
+    }
+
+    // =========================================================================
+    // HELPER & STREAK CALCULATIONS (v0.2)
+    // =========================================================================
+    function getDimensionById(dimId) {
+      return appState.dimensions.find(d => d.id === dimId) || appState.dimensions[0];
+    }
+
+    function isHabitScheduledOnDate(habit, dateObj) {
+      const dayOfWeek = dateObj.getDay(); // 0 Sun .. 6 Sat
+      if (habit.frequency === 'daily') return true;
+      if (habit.frequency === 'weekdays') return dayOfWeek >= 1 && dayOfWeek <= 5;
+      if (habit.frequency === 'weekends') return dayOfWeek === 0 || dayOfWeek === 6;
+      if (habit.frequency === 'custom' && Array.isArray(habit.customDays)) {
+        return habit.customDays.includes(dayOfWeek);
+      }
+      return true;
+    }
+
+    function computeHabitStats(habit) {
+      const history = habit.history || {};
+      // Current streak looking backward up to 60 days from today
+      let currentStreak = 0;
+      for (let i = 0; i < 60; i++) {
+        const d = addDays(TODAY_DATE, -i);
+        const key = formatDateKey(d);
+        const scheduled = isHabitScheduledOnDate(habit, d);
+        if (!scheduled) continue;
+        if (history[key]) {
+          currentStreak++;
+        } else {
+          // If i === 0 (today) isn't checked yet, don't break streak from yesterday
+          if (i === 0) continue;
+          break;
+        }
+      }
+
+      // 7-day completion rate
+      let scheduled7 = 0;
+      let completed7 = 0;
+      for (let i = 0; i < 7; i++) {
+        const d = addDays(TODAY_DATE, -i);
+        const key = formatDateKey(d);
+        if (isHabitScheduledOnDate(habit, d)) {
+          scheduled7++;
+          if (history[key]) completed7++;
+        }
+      }
+      const rate7 = scheduled7 > 0 ? Math.round((completed7 / scheduled7) * 100) : 100;
+      return { currentStreak, completed7, scheduled7, rate7 };
+    }
+
+    function getDimension7DayActivityCount(dimId) {
+      let count = 0;
+      const last7Keys = [];
+      for (let i = 0; i < 7; i++) {
+        last7Keys.push(formatDateKey(addDays(TODAY_DATE, -i)));
+      }
+      appState.habits.filter(h => h.dimensionId === dimId).forEach(h => {
+        last7Keys.forEach(k => {
+          if (h.history && h.history[k]) count++;
+        });
+      });
+      appState.tasks.filter(t => t.dimensionId === dimId && t.completed).forEach(t => {
+        if (!t.completedDate || last7Keys.includes(t.completedDate)) {
+          count++;
+        }
+      });
+      return count;
+    }
+
+    function getNeglectedDimensions() {
+      return appState.dimensions.filter(dim => {
+        const highImportance = dim.score >= 4 || dim.isQuarterlyFocus;
+        const recentActivity = getDimension7DayActivityCount(dim.id);
+        return highImportance && recentActivity === 0;
+      });
+    }
+
+    // =========================================================================
+    // TAB NAVIGATION
+    // =========================================================================
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-panel').forEach(panel => {
+        panel.classList.add('hidden');
+      });
+      const target = document.getElementById(`tab-${tabId}`);
+      if (target) target.classList.remove('hidden');
+
+      document.querySelectorAll('.nav-tab-btn').forEach(btn => {
+        const isCurrent = btn.getAttribute('data-tab') === tabId;
+        btn.className = isCurrent
+          ? 'nav-tab-btn px-3.5 py-2.5 text-xs sm:text-sm font-semibold border-b-2 border-indigo-600 text-indigo-600 whitespace-nowrap transition'
+          : 'nav-tab-btn px-3.5 py-2.5 text-xs sm:text-sm font-medium border-b-2 border-transparent text-slate-600 hover:text-slate-900 whitespace-nowrap transition';
+      });
+
+      if (tabId === 'calendar') {
+        renderCalendarAndCharts();
+      }
+      if (tabId === 'v03analytics') {
+        renderV03AnalyticsTab();
+      }
+    }
+
+    // =========================================================================
+    // RENDER ALL UI SECTIONS
+    // =========================================================================
+    function renderAll() {
+      populateDimensionSelects();
+      renderHeaderAndKPIs();
+      renderDashboardTab();
+      renderDimensionsTab();
+      renderHierarchyTab();
+      renderHabitsTab();
+      renderCalendarAndCharts();
+      renderReviewTab();
+      renderV03AnalyticsTab();
+    }
+
+    function populateDimensionSelects() {
+      const filterSelect = document.getElementById('filterDimension');
+      const modalSelect = document.getElementById('modalDimensionInput');
+      if (filterSelect) {
+        const currentVal = filterSelect.value || 'all';
+        filterSelect.innerHTML = `<option value="all">All 10 Dimensions</option>` +
+          appState.dimensions.map(d => `<option value="${d.id}">${d.name}</option>`).join('');
+        filterSelect.value = currentVal;
+      }
+      if (modalSelect) {
+        const currentModalVal = modalSelect.value || appState.dimensions[0].id;
+        modalSelect.innerHTML = appState.dimensions.map(d => `<option value="${d.id}">${d.name}</option>`).join('');
+        modalSelect.value = currentModalVal;
+      }
+    }
+
+    function renderHeaderAndKPIs() {
+      const focusCount = appState.dimensions.filter(d => d.isQuarterlyFocus).length;
+      const headerFocusText = document.getElementById('headerFocusText');
+      if (headerFocusText) {
+        headerFocusText.textContent = `${focusCount}/5 Quarterly Focus Areas`;
+      }
+
+      const kpiFocusCount = document.getElementById('kpiFocusCount');
+      const kpiFocusStatus = document.getElementById('kpiFocusStatus');
+      if (kpiFocusCount && kpiFocusStatus) {
+        kpiFocusCount.textContent = `${focusCount} / 5`;
+        if (focusCount >= 3 && focusCount <= 5) {
+          kpiFocusStatus.textContent = 'Optimal (3–5)';
+          kpiFocusStatus.className = 'text-xs font-semibold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700';
+        } else if (focusCount > 5) {
+          kpiFocusStatus.textContent = 'Overloaded (>5)';
+          kpiFocusStatus.className = 'text-xs font-semibold px-2 py-0.5 rounded-full bg-rose-50 text-rose-700';
+        } else {
+          kpiFocusStatus.textContent = 'Under-selected (<3)';
+          kpiFocusStatus.className = 'text-xs font-semibold px-2 py-0.5 rounded-full bg-amber-50 text-amber-700';
+        }
+      }
+
+      // Tasks KPI
+      const totalTasks = appState.tasks.length;
+      const completedTasks = appState.tasks.filter(t => t.completed).length;
+      const p1Pending = appState.tasks.filter(t => !t.completed && t.priority === 'P1').length;
+      document.getElementById('kpiTasksStat').textContent = `${completedTasks} / ${totalTasks}`;
+      document.getElementById('kpiP1Pending').textContent = `${p1Pending} P1 Critical`;
+
+      // Habits KPI
+      let totalSched7 = 0;
+      let totalComp7 = 0;
+      let topStreak = 0;
+      let todaySched = 0;
+      let todayDone = 0;
+      appState.habits.forEach(h => {
+        const st = computeHabitStats(h);
+        totalSched7 += st.scheduled7;
+        totalComp7 += st.completed7;
+        if (st.currentStreak > topStreak) topStreak = st.currentStreak;
+        if (isHabitScheduledOnDate(h, TODAY_DATE)) {
+          todaySched++;
+          if (h.history && h.history[TODAY_KEY]) todayDone++;
+        }
+      });
+      const overallHabitRate = totalSched7 > 0 ? Math.round((totalComp7 / totalSched7) * 100) : 0;
+      document.getElementById('kpiHabitRate').textContent = `${overallHabitRate}%`;
+      document.getElementById('kpiTopStreak').textContent = `Top Streak: ${topStreak}d`;
+      document.getElementById('kpiTodayHabitsDone').textContent = `${todayDone} of ${todaySched} scheduled today`;
+
+      // Neglect KPI
+      const neglected = getNeglectedDimensions();
+      document.getElementById('kpiNeglectCount').textContent = String(neglected.length);
+    }
+
+    // =========================================================================
+    // TAB 1: DASHBOARD & DAILY 3 RENDER
+    // =========================================================================
+    function renderDashboardTab() {
+      const slotsMeta = [
+        { key: 'responsibility', label: 'Slot 1: Responsibility', desc: 'Urgent work, finance, health or home obligation', badge: 'bg-rose-50 text-rose-700 border-rose-200' },
+        { key: 'growth', label: 'Slot 2: Growth & Health', desc: 'Career AI upskilling, fitness routine, or wealth building', badge: 'bg-indigo-50 text-indigo-700 border-indigo-200' },
+        { key: 'family', label: 'Slot 3: Family & Happiness', desc: 'Kids coaching, spouse quality time, or vocal/hobby joy', badge: 'bg-emerald-50 text-emerald-700 border-emerald-200' }
+      ];
+
+      const container = document.getElementById('daily3SlotsContainer');
+      container.innerHTML = slotsMeta.map(slot => {
+        const pinnedTask = appState.tasks.find(t => t.pinnedDaily3 && t.dailySlot === slot.key);
+        if (pinnedTask) {
+          const dim = getDimensionById(pinnedTask.dimensionId);
+          const pMeta = PRIORITY_META[pinnedTask.priority] || PRIORITY_META.P2;
+          return `
+            <div class="p-3.5 rounded-xl border ${pinnedTask.completed ? 'bg-slate-50 border-slate-200' : 'bg-white border-slate-200'} flex items-start justify-between gap-3">
+              <div class="flex items-start gap-3">
+                <input type="checkbox" ${pinnedTask.completed ? 'checked' : ''} onchange="window.toggleTaskCompleted('${pinnedTask.id}')" class="mt-1 h-4 w-4 rounded border-slate-300 text-indigo-600 cursor-pointer" />
+                <div>
+                  <div class="flex flex-wrap items-center gap-1.5">
+                    <span class="px-2 py-0.5 text-[11px] font-semibold rounded border ${slot.badge}">${slot.label}</span>
+                    <span class="px-2 py-0.5 text-[11px] font-semibold rounded border ${pMeta.badgeClass}">${pinnedTask.priority}</span>
+                    <span class="text-xs font-medium text-slate-500">${dim.name}</span>
+                  </div>
+                  <p class="text-sm font-semibold mt-1 ${pinnedTask.completed ? 'line-through text-slate-400' : 'text-slate-900'}">${escapeHtml(pinnedTask.title)}</p>
+                </div>
+              </div>
+              <button type="button" onclick="window.unpinDaily3('${pinnedTask.id}')" class="text-xs text-slate-400 hover:text-slate-700 font-medium whitespace-nowrap">Change</button>
+            </div>
+          `;
+        } else {
+          return `
+            <div class="p-3.5 rounded-xl border border-dashed border-slate-300 bg-slate-50/50 flex flex-wrap items-center justify-between gap-2">
+              <div>
+                <span class="px-2 py-0.5 text-[11px] font-semibold rounded border ${slot.badge}">${slot.label}</span>
+                <p class="text-xs text-slate-500 mt-1">${slot.desc}</p>
+              </div>
+              <button type="button" onclick="window.openQuickAddForSlot('${slot.key}')" class="px-2.5 py-1 rounded-lg bg-white border border-slate-300 hover:bg-slate-100 text-xs font-semibold text-slate-700">+ Assign Action</button>
+            </div>
+          `;
+        }
+      }).join('');
+
+      // Today's Habits list on Dashboard
+      document.getElementById('todayDateSubtitle').textContent = `Today (${TODAY_KEY}) — Click to log completion`;
+      const dashHabits = document.getElementById('dashboardHabitsList');
+      dashHabits.innerHTML = appState.habits.map(h => {
+        const doneToday = Boolean(h.history && h.history[TODAY_KEY]);
+        const scheduledToday = isHabitScheduledOnDate(h, TODAY_DATE);
+        const st = computeHabitStats(h);
+        const dim = getDimensionById(h.dimensionId);
+        return `
+          <div class="p-3 rounded-xl border ${doneToday ? 'bg-emerald-50/40 border-emerald-200' : 'bg-white border-slate-200'} flex items-center justify-between gap-3">
+            <label class="flex items-center gap-3 cursor-pointer flex-1">
+              <input type="checkbox" ${doneToday ? 'checked' : ''} onchange="window.toggleHabitDate('${h.id}', '${TODAY_KEY}')" class="h-4 w-4 rounded border-slate-300 text-emerald-600" />
+              <div>
+                <div class="text-xs sm:text-sm font-semibold ${doneToday ? 'line-through text-slate-500' : 'text-slate-900'}">${escapeHtml(h.title)}</div>
+                <div class="flex flex-wrap items-center gap-2 text-[11px] text-slate-500 mt-0.5">
+                  <span>${dim.name}</span>
+                  <span>•</span>
+                  <span>⏰ ${h.reminderTime || '07:00'}</span>
+                  ${!scheduledToday ? '<span class="px-1.5 py-0.2 bg-slate-100 rounded text-slate-600">Optional Today</span>' : ''}
+                </div>
+              </div>
+            </label>
+            <div class="text-right">
+              <span class="px-2 py-0.5 rounded-full text-xs font-bold bg-amber-50 text-amber-800 border border-amber-200">🔥 ${st.currentStreak}d</span>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      // Neglect Alerts Box
+      const neglected = getNeglectedDimensions();
+      const neglectBox = document.getElementById('neglectAlertItems');
+      if (neglected.length === 0) {
+        neglectBox.innerHTML = `
+          <div class="col-span-full text-xs font-medium text-emerald-800 bg-emerald-50 border border-emerald-200 rounded-lg px-3.5 py-2.5">
+            All high-priority and 90-day focus dimensions have active completions logged in the past 7 days!
+          </div>
+        `;
+      } else {
+        neglectBox.innerHTML = neglected.map(dim => `
+          <div class="bg-white rounded-lg p-3 border border-amber-200 shadow-xs flex flex-col justify-between gap-2">
+            <div>
+              <div class="flex items-center justify-between gap-1">
+                <span class="text-xs font-bold text-slate-900">${escapeHtml(dim.name)}</span>
+                <span class="px-1.5 py-0.5 text-[10px] font-bold rounded bg-rose-100 text-rose-800">Score ${dim.score}/5 • 0 acts (7d)</span>
+              </div>
+              <p class="text-xs text-slate-600 mt-1 line-clamp-2">Next: ${escapeHtml(dim.nextAction)}</p>
+            </div>
+            <div class="flex items-center justify-end gap-2 pt-1">
+              <button type="button" onclick="window.openQuickAddForDimension('${dim.id}')" class="px-2.5 py-1 rounded bg-amber-100 hover:bg-amber-200 text-amber-900 text-xs font-semibold">+ Schedule Action</button>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      // Master 10-Dimension Table
+      const tbody = document.getElementById('masterDashboardTableBody');
+      tbody.innerHTML = appState.dimensions.map(dim => {
+        const act7 = getDimension7DayActivityCount(dim.id);
+        return `
+          <tr class="hover:bg-slate-50/80 transition">
+            <td class="py-3 px-4">
+              <div class="font-semibold text-slate-900 flex items-center gap-2">
+                <span class="w-2.5 h-2.5 rounded-full inline-block" style="background:${dim.color}"></span>
+                <span>${escapeHtml(dim.name)}</span>
+              </div>
+              <div class="text-xs text-slate-500 mt-0.5">${escapeHtml(dim.subtitle)}</div>
+            </td>
+            <td class="py-3 px-3 text-center">
+              <span class="inline-flex items-center justify-center px-2.5 py-0.5 rounded-full text-xs font-bold ${dim.score >= 4 ? 'bg-rose-50 text-rose-700 border border-rose-200' : 'bg-slate-100 text-slate-700'}">${dim.score} / 5</span>
+            </td>
+            <td class="py-3 px-3 text-center">
+              <button type="button" onclick="window.toggleDimensionFocus('${dim.id}')" class="px-2.5 py-1 rounded-full text-xs font-semibold transition ${dim.isQuarterlyFocus ? 'bg-indigo-600 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}">
+                ${dim.isQuarterlyFocus ? '★ 90d Focus' : 'Maintenance'}
+              </button>
+            </td>
+            <td class="py-3 px-4 text-xs text-slate-700 max-w-xs">${escapeHtml(dim.primaryOutcome)}</td>
+            <td class="py-3 px-4 text-xs font-medium text-indigo-950 max-w-xs">${escapeHtml(dim.nextAction)}</td>
+            <td class="py-3 px-3 text-center">
+              <span class="px-2 py-0.5 rounded text-xs font-semibold ${act7 > 0 ? 'bg-emerald-50 text-emerald-700' : 'bg-amber-50 text-amber-800'}">${act7} done</span>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    // =========================================================================
+    // TAB 2: 10 LIFE DIMENSIONS RENDER
+    // =========================================================================
+    function renderDimensionsTab() {
+      const focusCount = appState.dimensions.filter(d => d.isQuarterlyFocus).length;
+      const banner = document.getElementById('dimensionsRuleBanner');
+      if (banner) {
+        banner.textContent = `Active Quarterly Focus: ${focusCount} / 5 (${focusCount >= 3 && focusCount <= 5 ? 'Optimal' : 'Target 3–5 areas'})`;
+      }
+
+      const grid = document.getElementById('dimensionsCardsGrid');
+      grid.innerHTML = appState.dimensions.map(dim => {
+        const dimGoals = appState.goals.filter(g => g.dimensionId === dim.id);
+        const dimTasks = appState.tasks.filter(t => t.dimensionId === dim.id && !t.completed);
+        const act7 = getDimension7DayActivityCount(dim.id);
+        return `
+          <div class="bg-white rounded-xl border ${dim.isQuarterlyFocus ? 'border-indigo-300 ring-1 ring-indigo-100' : 'border-slate-200'} p-5 shadow-sm space-y-4">
+            <div class="flex items-start justify-between gap-3">
+              <div>
+                <div class="flex items-center gap-2">
+                  <span class="w-3 h-3 rounded-full" style="background:${dim.color}"></span>
+                  <h3 class="text-base font-bold text-slate-900">${escapeHtml(dim.name)}</h3>
+                </div>
+                <p class="text-xs text-slate-500 mt-0.5">${escapeHtml(dim.subtitle)}</p>
+              </div>
+              <button type="button" onclick="window.toggleDimensionFocus('${dim.id}')" class="px-3 py-1 rounded-full text-xs font-semibold whitespace-nowrap ${dim.isQuarterlyFocus ? 'bg-indigo-600 text-white' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'}">
+                ${dim.isQuarterlyFocus ? '★ 90-Day Focus' : 'Maintenance Mode'}
+              </button>
+            </div>
+
+            <!-- Attention Score Slider (1-5) -->
+            <div class="p-3 rounded-lg bg-slate-50 border border-slate-100 space-y-1.5">
+              <div class="flex items-center justify-between text-xs">
+                <span class="font-semibold text-slate-700">Attention Needed Score (1 = Low, 5 = High)</span>
+                <span class="font-bold text-indigo-600">${dim.score} / 5</span>
+              </div>
+              <input type="range" min="1" max="5" step="1" value="${dim.score}" onchange="window.updateDimensionScore('${dim.id}', this.value)" class="w-full accent-indigo-600 cursor-pointer" />
+            </div>
+
+            <!-- Editable Outcome & Next Concrete Action -->
+            <div class="space-y-2.5">
+              <div>
+                <label class="block text-[11px] font-semibold uppercase tracking-wider text-slate-500 mb-1">Level 2: 90-Day Primary Outcome</label>
+                <input type="text" value="${escapeAttr(dim.primaryOutcome)}" onchange="window.updateDimensionField('${dim.id}', 'primaryOutcome', this.value)" class="w-full rounded-lg border border-slate-200 px-3 py-1.5 text-xs sm:text-sm focus:border-indigo-500" />
+              </div>
+              <div>
+                <label class="block text-[11px] font-semibold uppercase tracking-wider text-slate-500 mb-1">Level 4: Next Concrete Action</label>
+                <input type="text" value="${escapeAttr(dim.nextAction)}" onchange="window.updateDimensionField('${dim.id}', 'nextAction', this.value)" class="w-full rounded-lg border border-slate-200 px-3 py-1.5 text-xs sm:text-sm focus:border-indigo-500" />
+              </div>
+            </div>
+
+            <!-- Footer Stats & Quick Add -->
+            <div class="pt-2 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+              <div class="flex items-center gap-3">
+                <span><strong>${dimGoals.length}</strong> Goals</span>
+                <span><strong>${dimTasks.length}</strong> Open Tasks</span>
+                <span><strong>${act7}</strong> 7d Actions</span>
+              </div>
+              <button type="button" onclick="window.openQuickAddForDimension('${dim.id}')" class="text-indigo-600 hover:underline font-semibold">+ Add Task/Habit</button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // =========================================================================
+    // TAB 3: GOALS & TASKS (P1-P4 HIERARCHY) RENDER
+    // =========================================================================
+    function renderHierarchyTab() {
+      const dimFilter = document.getElementById('filterDimension').value;
+      const prioFilter = document.getElementById('filterPriority').value;
+      const statusFilter = document.getElementById('filterStatus').value;
+      const searchVal = (document.getElementById('filterSearch').value || '').trim().toLowerCase();
+
+      // Priority summary cards
+      const pillsEl = document.getElementById('priorityBreakdownPills');
+      pillsEl.innerHTML = ['P1', 'P2', 'P3', 'P4'].map(pKey => {
+        const meta = PRIORITY_META[pKey];
+        const countOpen = appState.tasks.filter(t => t.priority === pKey && !t.completed).length;
+        const countGoals = appState.goals.filter(g => g.priority === pKey).length;
+        return `
+          <div class="bg-white rounded-xl p-3.5 border border-slate-200 shadow-xs">
+            <div class="flex items-center justify-between">
+              <span class="px-2 py-0.5 text-xs font-bold rounded border ${meta.badgeClass}">${meta.label}</span>
+              <span class="text-xs font-semibold text-slate-600">${countOpen} Open Tasks • ${countGoals} Goals</span>
+            </div>
+            <p class="text-[11px] text-slate-500 mt-1.5">${meta.desc}</p>
+          </div>
+        `;
+      }).join('');
+
+      // Filter Goals
+      const filteredGoals = appState.goals.filter(g => {
+        if (dimFilter !== 'all' && g.dimensionId !== dimFilter) return false;
+        if (prioFilter !== 'all' && g.priority !== prioFilter) return false;
+        if (statusFilter === 'completed' && g.progress < 100) return false;
+        if (statusFilter === 'active' && g.progress >= 100) return false;
+        if (searchVal && !g.title.toLowerCase().includes(searchVal)) return false;
+        return true;
+      });
+
+      document.getElementById('goalsCountBadge').textContent = `${filteredGoals.length} Outcome(s)`;
+      const goalsContainer = document.getElementById('goalsListContainer');
+      if (filteredGoals.length === 0) {
+        goalsContainer.innerHTML = `<div class="col-span-full text-xs text-slate-500 py-4 text-center">No 90-day outcomes match your current filter.</div>`;
+      } else {
+        goalsContainer.innerHTML = filteredGoals.map(g => {
+          const dim = getDimensionById(g.dimensionId);
+          const pMeta = PRIORITY_META[g.priority] || PRIORITY_META.P2;
+          return `
+            <div class="p-4 rounded-xl border border-slate-200 bg-slate-50/50 space-y-3">
+              <div class="flex items-start justify-between gap-2">
+                <div>
+                  <div class="flex flex-wrap items-center gap-1.5">
+                    <span class="px-2 py-0.5 text-[11px] font-bold rounded border ${pMeta.badgeClass}">${g.priority}</span>
+                    <span class="text-xs font-semibold text-slate-600">${escapeHtml(dim.name)}</span>
+                    <span class="text-xs text-slate-400">• ${escapeHtml(g.quarter)}</span>
+                  </div>
+                  <h4 class="text-sm font-bold text-slate-900 mt-1">${escapeHtml(g.title)}</h4>
+                </div>
+                <button type="button" onclick="window.deleteGoal('${g.id}')" class="text-xs text-slate-400 hover:text-rose-600 font-semibold px-1">Delete</button>
+              </div>
+              <div class="space-y-1">
+                <div class="flex items-center justify-between text-xs">
+                  <span class="text-slate-600 font-medium">Quarterly Completion Progress</span>
+                  <span class="font-bold text-indigo-600">${g.progress}%</span>
+                </div>
+                <input type="range" min="0" max="100" step="5" value="${g.progress}" onchange="window.updateGoalProgress('${g.id}', this.value)" class="w-full accent-indigo-600 cursor-pointer" />
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      // Filter Tasks
+      const priorityRank = { P1: 1, P2: 2, P3: 3, P4: 4 };
+      const filteredTasks = appState.tasks.filter(t => {
+        if (dimFilter !== 'all' && t.dimensionId !== dimFilter) return false;
+        if (prioFilter !== 'all' && t.priority !== prioFilter) return false;
+        if (statusFilter === 'completed' && !t.completed) return false;
+        if (statusFilter === 'active' && t.completed) return false;
+        if (searchVal && !t.title.toLowerCase().includes(searchVal)) return false;
+        return true;
+      }).sort((a, b) => {
+        if (a.completed !== b.completed) return a.completed ? 1 : -1;
+        return (priorityRank[a.priority] || 9) - (priorityRank[b.priority] || 9);
+      });
+
+      document.getElementById('tasksCountBadge').textContent = `${filteredTasks.length} Task(s)`;
+      const tasksContainer = document.getElementById('tasksListContainer');
+      if (filteredTasks.length === 0) {
+        tasksContainer.innerHTML = `<div class="text-xs text-slate-500 py-4 text-center">No concrete actions match your current filter.</div>`;
+      } else {
+        tasksContainer.innerHTML = filteredTasks.map(t => {
+          const dim = getDimensionById(t.dimensionId);
+          const pMeta = PRIORITY_META[t.priority] || PRIORITY_META.P2;
+          return `
+            <div class="p-3.5 rounded-xl border ${t.completed ? 'bg-slate-50 border-slate-200' : 'bg-white border-slate-200'} flex flex-wrap sm:flex-nowrap items-center justify-between gap-3">
+              <div class="flex items-start gap-3">
+                <input type="checkbox" ${t.completed ? 'checked' : ''} onchange="window.toggleTaskCompleted('${t.id}')" class="mt-1 h-4 w-4 rounded border-slate-300 text-indigo-600 cursor-pointer" />
+                <div>
+                  <div class="flex flex-wrap items-center gap-1.5">
+                    <span class="px-2 py-0.5 text-[11px] font-bold rounded border ${pMeta.badgeClass}">${t.priority}</span>
+                    <span class="text-xs font-semibold text-slate-600">${escapeHtml(dim.name)}</span>
+                    <span class="text-xs text-slate-400">• Due: ${t.dueDate || TODAY_KEY}</span>
+                    ${t.pinnedDaily3 ? '<span class="px-2 py-0.5 text-[10px] font-bold rounded bg-indigo-50 text-indigo-700 border border-indigo-200">Pinned Daily 3</span>' : ''}
+                  </div>
+                  <p class="text-sm font-semibold mt-1 ${t.completed ? 'line-through text-slate-400' : 'text-slate-900'}">${escapeHtml(t.title)}</p>
+                </div>
+              </div>
+              <div class="flex items-center gap-2 ml-auto">
+                <button type="button" onclick="window.togglePinDaily3('${t.id}')" class="px-2.5 py-1 rounded border text-xs font-semibold ${t.pinnedDaily3 ? 'bg-indigo-50 border-indigo-200 text-indigo-700' : 'border-slate-200 text-slate-600 hover:bg-slate-50'}">
+                  ${t.pinnedDaily3 ? 'Unpin Daily 3' : 'Pin Daily 3'}
+                </button>
+                <button type="button" onclick="window.deleteTask('${t.id}')" class="px-2 py-1 text-xs text-slate-400 hover:text-rose-600 font-semibold">Delete</button>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+    }
+
+    // =========================================================================
+    // TAB 4: HABITS & STREAKS (v0.2) RENDER
+    // =========================================================================
+    function renderHabitsTab() {
+      const grid = document.getElementById('habitsCardsGrid');
+      const last7Days = [];
+      for (let i = 6; i >= 0; i--) {
+        const d = addDays(TODAY_DATE, -i);
+        last7Days.push({
+          dateObj: d,
+          key: formatDateKey(d),
+          shortDay: d.toLocaleDateString('en-US', { weekday: 'short' }),
+          dayNum: d.getDate()
+        });
+      }
+
+      if (appState.habits.length === 0) {
+        grid.innerHTML = `<div class="col-span-full bg-white rounded-xl p-6 text-center text-xs text-slate-500 border border-slate-200">No habits configured yet. Click "+ New Habit / Routine" to start tracking streaks.</div>`;
+        return;
+      }
+
+      grid.innerHTML = appState.habits.map(h => {
+        const dim = getDimensionById(h.dimensionId);
+        const pMeta = PRIORITY_META[h.priority] || PRIORITY_META.P2;
+        const st = computeHabitStats(h);
+        const freqLabel = h.frequency === 'daily' ? 'Every Day' : h.frequency === 'weekdays' ? 'Weekdays (Mon–Fri)' : h.frequency === 'weekends' ? 'Weekends' : 'Custom Days';
+
+        const stripHtml = last7Days.map(day => {
+          const done = Boolean(h.history && h.history[day.key]);
+          const sched = isHabitScheduledOnDate(h, day.dateObj);
+          return `
+            <button type="button" onclick="window.toggleHabitDate('${h.id}', '${day.key}')" class="flex-1 py-2 rounded-lg border text-center transition ${done ? 'bg-emerald-600 border-emerald-600 text-white font-bold' : sched ? 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50' : 'bg-slate-50 border-dashed border-slate-200 text-slate-400'}">
+              <div class="text-[10px] uppercase">${day.shortDay}</div>
+              <div class="text-xs mt-0.5">${done ? '✓' : day.dayNum}</div>
+            </button>
+          `;
+        }).join('');
+
+        return `
+          <div class="bg-white rounded-xl border border-slate-200 p-5 shadow-sm space-y-4">
+            <div class="flex items-start justify-between gap-2">
+              <div>
+                <div class="flex flex-wrap items-center gap-1.5">
+                  <span class="px-2 py-0.5 text-[11px] font-bold rounded border ${pMeta.badgeClass}">${h.priority}</span>
+                  <span class="text-xs font-semibold text-slate-600">${escapeHtml(dim.name)}</span>
+                  <span class="text-xs text-slate-400">• ${freqLabel} • ⏰ ${h.reminderTime || '07:00'}</span>
+                </div>
+                <h3 class="text-sm sm:text-base font-bold text-slate-900 mt-1">${escapeHtml(h.title)}</h3>
+              </div>
+              <button type="button" onclick="window.deleteHabit('${h.id}')" class="text-xs text-slate-400 hover:text-rose-600 font-semibold">Delete</button>
+            </div>
+
+            <div class="flex items-center justify-between bg-slate-50 rounded-lg px-3.5 py-2 border border-slate-100 text-xs">
+              <div>
+                <span class="text-slate-500">Current Streak:</span>
+                <span class="font-bold text-amber-700 ml-1">🔥 ${st.currentStreak} day(s)</span>
+              </div>
+              <div>
+                <span class="text-slate-500">7-Day Rate:</span>
+                <span class="font-bold text-emerald-700 ml-1">${st.rate7}% (${st.completed7}/${st.scheduled7})</span>
+              </div>
+            </div>
+
+            <div>
+              <div class="text-[11px] font-medium text-slate-500 mb-1.5">Last 7 Days (Tap any day to toggle completion)</div>
+              <div class="flex items-center gap-1.5">${stripHtml}</div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // =========================================================================
+    // TAB 5: 7-DAY CALENDAR & ANALYTICS (v0.2) RENDER
+    // =========================================================================
+    function getRolling7DaysWindow() {
+      const offset = appState.calendarOffsetDays || 0;
+      const days = [];
+      for (let i = -6 + offset; i <= offset; i++) {
+        const d = addDays(TODAY_DATE, i);
+        days.push({
+          dateObj: d,
+          key: formatDateKey(d),
+          shortDay: d.toLocaleDateString('en-US', { weekday: 'short' }),
+          dateLabel: d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+          isToday: formatDateKey(d) === TODAY_KEY
+        });
+      }
+      return days;
+    }
+
+    function renderCalendarAndCharts() {
+      const days = getRolling7DaysWindow();
+      const headEl = document.getElementById('calendarTableHead');
+      const bodyEl = document.getElementById('calendarTableBody');
+      const footEl = document.getElementById('calendarTableFoot');
+
+      headEl.innerHTML = `
+        <tr>
+          <th class="py-3 px-4 font-semibold min-w-[200px]">Habit / Routine (Level 3)</th>
+          <th class="py-3 px-2 font-semibold text-center">Streak</th>
+          ${days.map(d => `
+            <th class="py-2.5 px-2 text-center ${d.isToday ? 'bg-indigo-50 text-indigo-700 font-bold' : ''}">
+              <div class="text-[11px] uppercase">${d.shortDay}</div>
+              <div class="text-xs">${d.dateLabel}</div>
+            </th>
+          `).join('')}
+        </tr>
+      `;
+
+      bodyEl.innerHTML = appState.habits.map(h => {
+        const dim = getDimensionById(h.dimensionId);
+        const st = computeHabitStats(h);
+        return `
+          <tr class="hover:bg-slate-50/70">
+            <td class="py-3 px-4">
+              <div class="font-semibold text-slate-900">${escapeHtml(h.title)}</div>
+              <div class="text-xs text-slate-500">${escapeHtml(dim.name)} • ⏰ ${h.reminderTime || '07:00'}</div>
+            </td>
+            <td class="py-3 px-2 text-center font-bold text-amber-700">🔥 ${st.currentStreak}d</td>
+            ${days.map(d => {
+              const done = Boolean(h.history && h.history[d.key]);
+              const sched = isHabitScheduledOnDate(h, d.dateObj);
+              return `
+                <td class="py-2.5 px-2 text-center ${d.isToday ? 'bg-indigo-50/30' : ''}">
+                  <button type="button" onclick="window.toggleHabitDate('${h.id}', '${d.key}')" class="w-8 h-8 rounded-lg border text-xs font-bold transition inline-flex items-center justify-center ${done ? 'bg-emerald-600 border-emerald-600 text-white shadow-xs' : sched ? 'bg-white border-slate-300 text-slate-400 hover:border-indigo-400' : 'bg-slate-100 border-dashed border-slate-200 text-slate-300'}">
+                    ${done ? '✓' : sched ? '·' : '–'}
+                  </button>
+                </td>
+              `;
+            }).join('')}
+          </tr>
+        `;
+      }).join('');
+
+      // Daily totals in footer
+      const dayTotals = days.map(d => {
+        let doneH = 0;
+        appState.habits.forEach(h => {
+          if (h.history && h.history[d.key]) doneH++;
+        });
+        const doneT = appState.tasks.filter(t => t.completed && (t.completedDate === d.key || t.dueDate === d.key)).length;
+        return { doneH, doneT, total: doneH + doneT };
+      });
+
+      footEl.innerHTML = `
+        <tr>
+          <td class="py-3 px-4 text-xs text-slate-700" colspan="2">Daily Output (Habits + Completed Tasks)</td>
+          ${dayTotals.map(dt => `
+            <td class="py-3 px-2 text-center text-xs text-indigo-700">${dt.total} <span class="text-[10px] text-slate-500 font-normal">(${dt.doneH}H+${dt.doneT}T)</span></td>
+          `).join('')}
+        </tr>
+      `;
+
+      // Scheduled Tasks by Day Grid
+      document.getElementById('calendarWindowLabel').textContent = `${days[0].dateLabel} – ${days[days.length - 1].dateLabel}`;
+      const weekTasksGrid = document.getElementById('calendarWeekTasksGrid');
+      weekTasksGrid.innerHTML = days.map(d => {
+        const dayTasks = appState.tasks.filter(t => t.dueDate === d.key);
+        return `
+          <div class="rounded-xl border ${d.isToday ? 'border-indigo-300 bg-indigo-50/30' : 'border-slate-200 bg-slate-50/50'} p-3 space-y-2">
+            <div class="flex items-center justify-between border-b border-slate-200/80 pb-1.5">
+              <span class="text-xs font-bold ${d.isToday ? 'text-indigo-700' : 'text-slate-700'}">${d.shortDay}, ${d.dateLabel}</span>
+              <span class="text-[11px] font-semibold text-slate-500">${dayTasks.length}</span>
+            </div>
+            <div class="space-y-1.5">
+              ${dayTasks.length === 0 ? '<p class="text-[11px] text-slate-400 italic">No tasks due</p>' : dayTasks.map(t => `
+                <label class="flex items-start gap-1.5 text-xs cursor-pointer">
+                  <input type="checkbox" ${t.completed ? 'checked' : ''} onchange="window.toggleTaskCompleted('${t.id}')" class="mt-0.5 rounded border-slate-300 text-indigo-600" />
+                  <span class="${t.completed ? 'line-through text-slate-400' : 'text-slate-800 font-medium'}">${escapeHtml(t.title)}</span>
+                </label>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      updateAnalyticsCharts(days, dayTotals);
+    }
+
+    function updateAnalyticsCharts(days, dayTotals) {
+      if (typeof Chart === 'undefined') return;
+
+      const ctxDim = document.getElementById('chartDimensionBalance');
+      const ctxTrend = document.getElementById('chartWeeklyTrend');
+      if (!ctxDim || !ctxTrend) return;
+
+      const labelsDim = appState.dimensions.map(d => d.name.replace(/^\d+\.\s*/, ''));
+      const scoresData = appState.dimensions.map(d => d.score);
+      const activityData = appState.dimensions.map(d => getDimension7DayActivityCount(d.id));
+
+      if (chartDimensionInstance) chartDimensionInstance.destroy();
+      chartDimensionInstance = new Chart(ctxDim, {
+        type: 'bar',
+        data: {
+          labels: labelsDim,
+          datasets: [
+            {
+              label: 'Attention Score (1–5)',
+              data: scoresData,
+              backgroundColor: 'rgba(79, 70, 229, 0.75)',
+              borderRadius: 4
+            },
+            {
+              label: '7-Day Actions Completed',
+              data: activityData,
+              backgroundColor: 'rgba(16, 185, 129, 0.8)',
+              borderRadius: 4
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { position: 'top', labels: { boxWidth: 12, font: { size: 11 } } }
+          },
+          scales: {
+            x: { ticks: { font: { size: 10 }, maxRotation: 35, minRotation: 20 } },
+            y: { beginAtZero: true, ticks: { stepSize: 1, font: { size: 11 } } }
+          }
+        }
+      });
+
+      if (chartWeeklyInstance) chartWeeklyInstance.destroy();
+      chartWeeklyInstance = new Chart(ctxTrend, {
+        type: 'line',
+        data: {
+          labels: days.map(d => `${d.shortDay} (${d.dateLabel})`),
+          datasets: [
+            {
+              label: 'Habits Completed',
+              data: dayTotals.map(dt => dt.doneH),
+              borderColor: '#10b981',
+              backgroundColor: 'rgba(16, 185, 129, 0.15)',
+              fill: true,
+              tension: 0.3
+            },
+            {
+              label: 'Tasks Completed',
+              data: dayTotals.map(dt => dt.doneT),
+              borderColor: '#4f46e5',
+              backgroundColor: 'rgba(79, 70, 229, 0.12)',
+              fill: true,
+              tension: 0.3
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { position: 'top', labels: { boxWidth: 12, font: { size: 11 } } }
+          },
+          scales: {
+            y: { beginAtZero: true, ticks: { stepSize: 1, font: { size: 11 } } }
+          }
+        }
+      });
+    }
+
+    // =========================================================================
+    // TAB 6: SUNDAY WEEKLY REVIEW RENDER
+    // =========================================================================
+    function renderReviewTab() {
+      const focusCount = appState.dimensions.filter(d => d.isQuarterlyFocus).length;
+      const rule1Pass = focusCount >= 3 && focusCount <= 5;
+      const rule2Pass = appState.dimensions.every(d => d.nextAction && d.nextAction.trim().length > 3);
+      const openTasksCount = appState.tasks.filter(t => !t.completed).length;
+      const rule3Pass = openTasksCount >= 5;
+      const p3Count = appState.tasks.filter(t => t.priority === 'P3').length + appState.goals.filter(g => g.priority === 'P3').length;
+      const rule4Pass = p3Count >= 1;
+      const rule5Pass = appState.reviews.length >= 1;
+
+      const rules = [
+        { title: 'Rule 1: Limit active improvement to 3–5 areas per quarter', pass: rule1Pass, detail: `Currently ${focusCount} dimension(s) marked as 90-Day Focus.` },
+        { title: 'Rule 2: Assign a Next Concrete Action to every dimension', pass: rule2Pass, detail: rule2Pass ? 'All 10 dimensions have defined next actions.' : 'Some dimensions are missing a next concrete action.' },
+        { title: 'Rule 3: Maintain 5–7 key actions scheduled for the week', pass: rule3Pass, detail: `${openTasksCount} active task(s) and ${appState.habits.length} recurring habits queued.` },
+        { title: 'Rule 4: Reserve space for P3 Exploration & experiments', pass: rule4Pass, detail: `${p3Count} P3 Exploration item(s) tracked across goals & tasks.` },
+        { title: 'Rule 5: Conduct Weekly Sunday Review consistently', pass: rule5Pass, detail: `${appState.reviews.length} reflection entry logged.` }
+      ];
+
+      document.getElementById('reviewRulesChecklist').innerHTML = rules.map(r => `
+        <div class="p-3 rounded-xl border ${r.pass ? 'bg-emerald-50/50 border-emerald-200' : 'bg-amber-50/60 border-amber-200'} flex items-start gap-3">
+          <span class="mt-0.5 w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold ${r.pass ? 'bg-emerald-600 text-white' : 'bg-amber-500 text-white'}">${r.pass ? '✓' : '!'}</span>
+          <div>
+            <div class="text-xs sm:text-sm font-semibold text-slate-900">${r.title}</div>
+            <div class="text-xs text-slate-600 mt-0.5">${r.detail}</div>
+          </div>
+        </div>
+      `).join('');
+
+      const listEl = document.getElementById('pastReviewsList');
+      if (appState.reviews.length === 0) {
+        listEl.innerHTML = `<p class="text-xs text-slate-400 italic">No reflections saved yet.</p>`;
+      } else {
+        listEl.innerHTML = appState.reviews.map(rev => `
+          <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-1.5 text-xs">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-indigo-700">Week of ${rev.date}</span>
+              <button type="button" onclick="window.deleteReview('${rev.id}')" class="text-slate-400 hover:text-rose-600 font-semibold">Delete</button>
+            </div>
+            <div><strong class="text-slate-700">Wins:</strong> <span class="text-slate-600">${escapeHtml(rev.wins)}</span></div>
+            <div><strong class="text-slate-700">Bottlenecks:</strong> <span class="text-slate-600">${escapeHtml(rev.blockers)}</span></div>
+            <div><strong class="text-slate-700">Next Week Focus:</strong> <span class="text-slate-600">${escapeHtml(rev.nextFocus)}</span></div>
+          </div>
+        `).join('');
+      }
+    }
+
+    // =========================================================================
+    // TAB 7: v0.3 SMART PRIORITIZER & LONG-TERM ANALYTICS ENGINE
+    // =========================================================================
+    function computeTaskSmartScore(task) {
+      const dim = getDimensionById(task.dimensionId);
+      const dimScorePoints = (dim ? dim.score : 3) * 10; // 10..50
+      const focusBonus = (dim && dim.isQuarterlyFocus) ? 15 : 0;
+      const tierWeights = { P1: 25, P2: 18, P3: 10, P4: 5 };
+      const tierPoints = tierWeights[task.priority] || 10;
+
+      // Due date urgency
+      let dueBonus = 0;
+      if (task.dueDate) {
+        if (task.dueDate <= TODAY_KEY) {
+          dueBonus = 12;
+        } else if (task.dueDate <= formatDateKey(addDays(TODAY_DATE, 2))) {
+          dueBonus = 6;
+        }
+      }
+
+      // Neglect bonus if dimension has 0 actions in last 7 days
+      const act7 = getDimension7DayActivityCount(task.dimensionId);
+      const neglectBonus = act7 === 0 ? 10 : 0;
+
+      const raw = dimScorePoints + focusBonus + tierPoints + dueBonus + neglectBonus;
+      const score = Math.min(100, Math.max(10, raw));
+
+      const reasons = [];
+      if (dim && dim.score >= 4) reasons.push(`High Need (${dim.score}/5)`);
+      if (dim && dim.isQuarterlyFocus) reasons.push('90d Focus');
+      if (task.priority === 'P1') reasons.push('P1 Critical');
+      if (dueBonus >= 12) reasons.push('Due Today/Overdue');
+      if (neglectBonus > 0) reasons.push('0 Recent Acts (7d)');
+
+      return {
+        score,
+        reasons: reasons.length ? reasons.join(' • ') : 'Standard Priority'
+      };
+    }
+
+    function renderV03AnalyticsTab() {
+      const harmonyEl = document.getElementById('v03HarmonyScore');
+      if (!harmonyEl) return;
+
+      // 1. Compute Life Harmony & Alignment Index
+      let weightedSum = 0;
+      let weightTotal = 0;
+      let highestGapDim = appState.dimensions[0];
+      let highestGapScore = -999;
+
+      appState.dimensions.forEach(dim => {
+        const act7 = getDimension7DayActivityCount(dim.id);
+        const dimGoals = appState.goals.filter(g => g.dimensionId === dim.id);
+        const avgGoalProg = dimGoals.length
+          ? dimGoals.reduce((acc, g) => acc + (g.progress || 0), 0) / dimGoals.length
+          : 50;
+        const momentumScore = Math.min(100, act7 * 25);
+        const dimHealth = Math.round(avgGoalProg * 0.55 + momentumScore * 0.45);
+        const weight = dim.score + (dim.isQuarterlyFocus ? 2 : 0);
+        weightedSum += dimHealth * weight;
+        weightTotal += weight;
+
+        const urgencyGap = (dim.score * 20 + (dim.isQuarterlyFocus ? 15 : 0)) - momentumScore;
+        if (urgencyGap > highestGapScore) {
+          highestGapScore = urgencyGap;
+          highestGapDim = dim;
+        }
+      });
+
+      const harmonyIndex = weightTotal > 0 ? Math.round(weightedSum / weightTotal) : 70;
+      harmonyEl.textContent = `${harmonyIndex}%`;
+      const badgeEl = document.getElementById('v03HarmonyBadge');
+      if (harmonyIndex >= 65) {
+        badgeEl.textContent = 'Strong Alignment';
+        badgeEl.className = 'text-xs font-semibold px-2 py-0.5 rounded bg-emerald-400/20 text-emerald-200';
+      } else if (harmonyIndex >= 45) {
+        badgeEl.textContent = 'Moderate Gap';
+        badgeEl.className = 'text-xs font-semibold px-2 py-0.5 rounded bg-amber-400/20 text-amber-200';
+      } else {
+        badgeEl.textContent = 'Needs Rebalancing';
+        badgeEl.className = 'text-xs font-semibold px-2 py-0.5 rounded bg-rose-400/20 text-rose-200';
+      }
+
+      // 2. Quarterly Outcome Velocity
+      const totalGoals = appState.goals.length;
+      const avgVelocity = totalGoals > 0
+        ? Math.round(appState.goals.reduce((s, g) => s + (g.progress || 0), 0) / totalGoals)
+        : 0;
+      document.getElementById('v03GoalVelocity').textContent = `${avgVelocity}%`;
+      document.getElementById('v03GoalCountTag').textContent = `${totalGoals} Outcome(s)`;
+
+      // 3. Top Recommended Focus Area
+      if (highestGapDim) {
+        document.getElementById('v03TopRecommendedDim').textContent = highestGapDim.name;
+        const actCount = getDimension7DayActivityCount(highestGapDim.id);
+        document.getElementById('v03TopRecommendedReason').textContent =
+          `Score ${highestGapDim.score}/5 • ${actCount} completed action(s) in last 7d`;
+      }
+
+      // 4. Build Smart Strategic Recommendations Cards
+      const insights = [];
+      const neglected = getNeglectedDimensions();
+      neglected.forEach(dim => {
+        insights.push({
+          type: 'Neglect Recovery',
+          badgeClass: 'bg-amber-100 text-amber-900 border-amber-200',
+          title: `Schedule a quick win in ${dim.name}`,
+          detail: `Rated ${dim.score}/5 attention need with 0 logged completions in 7 days. Next action: "${dim.nextAction}"`,
+          actionLabel: '+ Create P1 Task from Next Action',
+          actionFn: `window.v03CreateTaskFromDim('${dim.id}')`
+        });
+      });
+
+      // Check if any high-score dimension (5/5) is NOT in 90-day focus while focus count < 5
+      const focusDims = appState.dimensions.filter(d => d.isQuarterlyFocus);
+      const highNeedUnfocused = appState.dimensions.find(d => d.score >= 4 && !d.isQuarterlyFocus);
+      if (highNeedUnfocused && focusDims.length < 5) {
+        insights.push({
+          type: 'Quarterly Focus Slot Open',
+          badgeClass: 'bg-indigo-100 text-indigo-800 border-indigo-200',
+          title: `Promote ${highNeedUnfocused.name} to 90-Day Focus`,
+          detail: `You have ${focusDims.length}/5 focus slots used, and ${highNeedUnfocused.name} has a high attention score (${highNeedUnfocused.score}/5).`,
+          actionLabel: 'Enable 90-Day Focus',
+          actionFn: `window.toggleDimensionFocus('${highNeedUnfocused.id}')`
+        });
+      } else if (focusDims.length > 5) {
+        const lowestFocus = [...focusDims].sort((a, b) => a.score - b.score)[0];
+        if (lowestFocus) {
+          insights.push({
+            type: 'Focus Overload (>5 Areas)',
+            badgeClass: 'bg-rose-100 text-rose-800 border-rose-200',
+            title: `Move ${lowestFocus.name} to Maintenance Mode`,
+            detail: `Rule 1 recommends 3–5 active focus areas per quarter (currently ${focusDims.length}). ${lowestFocus.name} has the lowest urgency (${lowestFocus.score}/5) among active areas.`,
+            actionLabel: 'Switch to Maintenance',
+            actionFn: `window.toggleDimensionFocus('${lowestFocus.id}')`
+          });
+        }
+      }
+
+      // Check lagging 90-day P1/P2 goal (< 45% progress)
+      const laggingGoal = appState.goals
+        .filter(g => (g.priority === 'P1' || g.priority === 'P2') && g.progress < 45)
+        .sort((a, b) => a.progress - b.progress)[0];
+      if (laggingGoal) {
+        const gDim = getDimensionById(laggingGoal.dimensionId);
+        insights.push({
+          type: '90-Day Outcome Pacing',
+          badgeClass: 'bg-emerald-100 text-emerald-800 border-emerald-200',
+          title: `Accelerate "${laggingGoal.title}" (${laggingGoal.progress}%)`,
+          detail: `This ${laggingGoal.priority} outcome in ${gDim.name} is at ${laggingGoal.progress}% completion for ${laggingGoal.quarter}.`,
+          actionLabel: '+10% Milestone Step',
+          actionFn: `window.v03BumpGoal('${laggingGoal.id}')`
+        });
+      }
+
+      const insightsContainer = document.getElementById('v03SmartInsightsList');
+      if (insights.length === 0) {
+        insightsContainer.innerHTML = `
+          <div class="p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-xs text-emerald-900 font-medium">
+            Your 10 dimensions, 90-day focus limit (3–5 areas), and 7-day execution streaks are well balanced! Use the Priority Queue on the right to pick your next task.
+          </div>
+        `;
+      } else {
+        insightsContainer.innerHTML = insights.slice(0, 4).map(item => `
+          <div class="p-3.5 rounded-xl border border-slate-200 bg-slate-50/60 space-y-2">
+            <div class="flex items-center justify-between gap-2">
+              <span class="px-2 py-0.5 text-[10px] font-bold uppercase rounded border ${item.badgeClass}">${item.type}</span>
+            </div>
+            <div class="text-xs sm:text-sm font-bold text-slate-900">${escapeHtml(item.title)}</div>
+            <p class="text-xs text-slate-600">${escapeHtml(item.detail)}</p>
+            <div class="pt-1 flex justify-end">
+              <button type="button" onclick="${item.actionFn}" class="px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold transition">
+                ${item.actionLabel}
+              </button>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      // 5. Render Ranked Priority Queue
+      const bucketFilter = document.getElementById('v03QueueBucketFilter').value || 'all';
+      const scoredTasks = appState.tasks
+        .filter(t => !t.completed && (bucketFilter === 'all' || t.dailySlot === bucketFilter))
+        .map(t => ({ task: t, meta: computeTaskSmartScore(t) }))
+        .sort((a, b) => b.meta.score - a.meta.score);
+
+      const queueContainer = document.getElementById('v03RankedQueueList');
+      if (scoredTasks.length === 0) {
+        queueContainer.innerHTML = `<div class="text-xs text-slate-500 py-6 text-center">No open tasks in this bucket. Add a task to see its automated urgency score.</div>`;
+      } else {
+        queueContainer.innerHTML = scoredTasks.map((item, idx) => {
+          const t = item.task;
+          const dim = getDimensionById(t.dimensionId);
+          const pMeta = PRIORITY_META[t.priority] || PRIORITY_META.P2;
+          return `
+            <div class="p-3 rounded-xl border ${t.pinnedDaily3 ? 'border-indigo-300 bg-indigo-50/30' : 'border-slate-200 bg-white'} flex flex-wrap sm:flex-nowrap items-center justify-between gap-3">
+              <div class="flex items-start gap-3">
+                <div class="w-10 h-10 rounded-xl bg-slate-900 text-white flex flex-col items-center justify-center shrink-0">
+                  <span class="text-[9px] uppercase text-slate-400 font-semibold">#${idx + 1}</span>
+                  <span class="text-xs font-bold text-emerald-400">${item.meta.score}</span>
+                </div>
+                <div>
+                  <div class="flex flex-wrap items-center gap-1.5">
+                    <span class="px-2 py-0.5 text-[10px] font-bold rounded border ${pMeta.badgeClass}">${t.priority}</span>
+                    <span class="text-xs font-semibold text-slate-700">${escapeHtml(dim.name)}</span>
+                    <span class="text-[11px] text-slate-400">• ${escapeHtml(item.meta.reasons)}</span>
+                  </div>
+                  <p class="text-xs sm:text-sm font-bold text-slate-900 mt-1">${escapeHtml(t.title)}</p>
+                </div>
+              </div>
+              <div class="flex items-center gap-1.5 ml-auto shrink-0">
+                <button type="button" onclick="window.togglePinDaily3('${t.id}')" class="px-2.5 py-1 rounded-lg border text-xs font-semibold ${t.pinnedDaily3 ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white text-slate-700 border-slate-300 hover:bg-slate-50'}">
+                  ${t.pinnedDaily3 ? '★ Pinned' : 'Pin Daily 3'}
+                </button>
+                <button type="button" onclick="window.toggleTaskCompleted('${t.id}')" class="px-2.5 py-1 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 text-xs font-semibold">
+                  Done ✓
+                </button>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      // 6. Render Weekly Capacity Simulator
+      renderV03CapacitySimulator();
+
+      // 7. Render v0.3 Long-Term Charts
+      renderV03Charts();
+    }
+
+    function renderV03CapacitySimulator() {
+      const slider = document.getElementById('v03WeeklyHoursSlider');
+      const readout = document.getElementById('v03WeeklyHoursReadout');
+      const grid = document.getElementById('v03CapacityBreakdownGrid');
+      if (!slider || !grid) return;
+
+      const totalHrs = parseInt(slider.value, 10) || 16;
+      readout.textContent = `${totalHrs} hrs/wk`;
+
+      const allocations = [
+        { tier: 'P1 — Critical (Must Do)', share: 0.35, color: 'border-rose-200 bg-rose-50/50 text-rose-900', note: 'Health routines, core family duties & urgent finance/work' },
+        { tier: 'P2 — Growth (Must Build)', share: 0.40, color: 'border-indigo-200 bg-indigo-50/50 text-indigo-900', note: 'Agentic AI upskilling, kids STEM coaching & wealth building' },
+        { tier: 'P3 — Exploration (Try Out)', share: 0.15, color: 'border-amber-200 bg-amber-50/50 text-amber-900', note: 'Micro-SaaS validation, Hindi vocal singing & road trips' },
+        { tier: 'P4 — Maintenance (Admin)', share: 0.10, color: 'border-slate-200 bg-slate-50 text-slate-800', note: '2BHK vendor follow-ups, errands & Sunday weekly review' }
+      ];
+
+      grid.innerHTML = allocations.map(a => {
+        const hrs = (totalHrs * a.share).toFixed(1);
+        const minsPerDay = Math.round((totalHrs * a.share * 60) / 7);
+        return `
+          <div class="p-3.5 rounded-xl border ${a.color} space-y-1">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold">${a.tier}</span>
+              <span class="text-sm font-extrabold">${hrs}h / wk</span>
+            </div>
+            <div class="text-[11px] font-semibold opacity-80">~${minsPerDay} mins/day (${Math.round(a.share * 100)}% budget)</div>
+            <p class="text-[11px] opacity-75 pt-1">${a.note}</p>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderV03Charts() {
+      if (typeof Chart === 'undefined') return;
+      const ctxRadar = document.getElementById('chartV03Radar');
+      const ctxLong = document.getElementById('chartV03LongTerm');
+      if (!ctxRadar || !ctxLong) return;
+
+      const dimLabels = appState.dimensions.map(d => d.name.replace(/^\d+\.\s*/, ''));
+      const attentionScaled = appState.dimensions.map(d => d.score * 20);
+      const goalProgressByDim = appState.dimensions.map(d => {
+        const goals = appState.goals.filter(g => g.dimensionId === d.id);
+        if (!goals.length) return d.isQuarterlyFocus ? 40 : 60;
+        return Math.round(goals.reduce((s, g) => s + (g.progress || 0), 0) / goals.length);
+      });
+      const momentumByDim = appState.dimensions.map(d => {
+        const act = getDimension7DayActivityCount(d.id);
+        return Math.min(100, act * 25);
+      });
+
+      if (chartV03RadarInstance) chartV03RadarInstance.destroy();
+      chartV03RadarInstance = new Chart(ctxRadar, {
+        type: 'radar',
+        data: {
+          labels: dimLabels,
+          datasets: [
+            {
+              label: 'Attention Needed (Scaled %)',
+              data: attentionScaled,
+              borderColor: '#4f46e5',
+              backgroundColor: 'rgba(79, 70, 229, 0.12)',
+              pointBackgroundColor: '#4f46e5'
+            },
+            {
+              label: '90-Day Outcome Progress (%)',
+              data: goalProgressByDim,
+              borderColor: '#10b981',
+              backgroundColor: 'rgba(16, 185, 129, 0.15)',
+              pointBackgroundColor: '#10b981'
+            },
+            {
+              label: '7-Day Execution Momentum (%)',
+              data: momentumByDim,
+              borderColor: '#f59e0b',
+              backgroundColor: 'rgba(245, 158, 11, 0.10)',
+              pointBackgroundColor: '#f59e0b'
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            r: {
+              beginAtZero: true,
+              max: 100,
+              ticks: { stepSize: 25, font: { size: 9 } },
+              pointLabels: { font: { size: 10 } }
+            }
+          },
+          plugins: {
+            legend: { position: 'top', labels: { boxWidth: 10, font: { size: 10 } } }
+          }
+        }
+      });
+
+      const modeSelect = document.getElementById('v03ChartModeSelect');
+      const mode = modeSelect ? modeSelect.value : 'goals';
+
+      if (chartV03LongTermInstance) chartV03LongTermInstance.destroy();
+      if (mode === 'goals') {
+        chartV03LongTermInstance = new Chart(ctxLong, {
+          type: 'bar',
+          data: {
+            labels: appState.goals.map(g => g.title.length > 26 ? g.title.slice(0, 26) + '…' : g.title),
+            datasets: [
+              {
+                label: '90-Day Outcome Completion (%)',
+                data: appState.goals.map(g => g.progress || 0),
+                backgroundColor: appState.goals.map(g => g.priority === 'P1' ? '#e11d48' : g.priority === 'P2' ? '#4f46e5' : '#f59e0b'),
+                borderRadius: 5
+              }
+            ]
+          },
+          options: {
+            indexAxis: 'y',
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              x: { beginAtZero: true, max: 100, ticks: { callback: v => v + '%' } },
+              y: { ticks: { font: { size: 10 } } }
+            },
+            plugins: {
+              legend: { position: 'top', labels: { boxWidth: 12, font: { size: 11 } } }
+            }
+          }
+        });
+      } else {
+        const tiers = ['P1', 'P2', 'P3', 'P4'];
+        const openCounts = tiers.map(p => appState.tasks.filter(t => t.priority === p && !t.completed).length);
+        const doneCounts = tiers.map(p => appState.tasks.filter(t => t.priority === p && t.completed).length);
+        const habitCounts = tiers.map(p => appState.habits.filter(h => h.priority === p).length);
+
+        chartV03LongTermInstance = new Chart(ctxLong, {
+          type: 'bar',
+          data: {
+            labels: ['P1 Critical', 'P2 Growth', 'P3 Exploration', 'P4 Maintenance'],
+            datasets: [
+              { label: 'Open Tasks', data: openCounts, backgroundColor: '#4f46e5', borderRadius: 4 },
+              { label: 'Completed Tasks', data: doneCounts, backgroundColor: '#10b981', borderRadius: 4 },
+              { label: 'Active Habits', data: habitCounts, backgroundColor: '#f59e0b', borderRadius: 4 }
+            ]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              y: { beginAtZero: true, ticks: { stepSize: 1 } }
+            },
+            plugins: {
+              legend: { position: 'top', labels: { boxWidth: 12, font: { size: 11 } } }
+            }
+          }
+        });
+      }
+    }
+
+    window.v03CreateTaskFromDim = function(dimId) {
+      const dim = getDimensionById(dimId);
+      if (!dim) return;
+      const slot = (dimId === 'family' || dimId === 'hobbies' || dimId === 'relationships')
+        ? 'family'
+        : (dimId === 'finance' || dimId === 'management')
+          ? 'responsibility'
+          : 'growth';
+      appState.tasks.unshift({
+        id: 'id-' + Date.now(),
+        dimensionId: dim.id,
+        title: dim.nextAction || `Complete key action for ${dim.name}`,
+        priority: dim.score >= 5 ? 'P1' : 'P2',
+        dueDate: TODAY_KEY,
+        dailySlot: slot,
+        pinnedDaily3: false,
+        completed: false,
+        completedDate: null
+      });
+      saveState(`Created priority task for ${dim.name}`);
+      renderAll();
+    };
+
+    window.v03BumpGoal = function(goalId) {
+      const goal = appState.goals.find(g => g.id === goalId);
+      if (!goal) return;
+      goal.progress = Math.min(100, (goal.progress || 0) + 10);
+      saveState(`Updated "${goal.title}" to ${goal.progress}%`);
+      renderAll();
+    };
+
+    // =========================================================================
+    // INTERACTIVE HANDLERS (EXPOSED GLOBALLY FOR INLINE HANDLERS)
+    // =========================================================================
+    window.toggleDimensionFocus = function(dimId) {
+      const dim = getDimensionById(dimId);
+      if (!dim) return;
+      dim.isQuarterlyFocus = !dim.isQuarterlyFocus;
+      saveState(`${dim.name} mode updated`);
+      renderAll();
+    };
+
+    window.updateDimensionScore = function(dimId, val) {
+      const dim = getDimensionById(dimId);
+      if (!dim) return;
+      dim.score = Math.min(5, Math.max(1, parseInt(val, 10) || 3));
+      saveState(`${dim.name} attention score set to ${dim.score}/5`);
+      renderAll();
+    };
+
+    window.updateDimensionField = function(dimId, field, value) {
+      const dim = getDimensionById(dimId);
+      if (!dim) return;
+      dim[field] = value;
+      saveState('Dimension updated');
+      renderDashboardTab();
+      renderReviewTab();
+    };
+
+    window.toggleTaskCompleted = function(taskId) {
+      const task = appState.tasks.find(t => t.id === taskId);
+      if (!task) return;
+      task.completed = !task.completed;
+      task.completedDate = task.completed ? TODAY_KEY : null;
+      saveState(task.completed ? 'Task completed!' : 'Task reopened');
+      renderAll();
+    };
+
+    window.unpinDaily3 = function(taskId) {
+      const task = appState.tasks.find(t => t.id === taskId);
+      if (!task) return;
+      task.pinnedDaily3 = false;
+      saveState('Removed from Daily 3 slot');
+      renderAll();
+    };
+
+    window.togglePinDaily3 = function(taskId) {
+      const task = appState.tasks.find(t => t.id === taskId);
+      if (!task) return;
+      if (!task.pinnedDaily3) {
+        // Unpin existing task in the same slot so each of the 3 slots has 1 focused item
+        appState.tasks.forEach(other => {
+          if (other.dailySlot === task.dailySlot) other.pinnedDaily3 = false;
+        });
+        task.pinnedDaily3 = true;
+        saveState('Pinned to Today\'s Daily 3 Focus');
+      } else {
+        task.pinnedDaily3 = false;
+        saveState('Unpinned from Daily 3');
+      }
+      renderAll();
+    };
+
+    window.deleteTask = function(taskId) {
+      appState.tasks = appState.tasks.filter(t => t.id !== taskId);
+      saveState('Task deleted');
+      renderAll();
+    };
+
+    window.updateGoalProgress = function(goalId, val) {
+      const goal = appState.goals.find(g => g.id === goalId);
+      if (!goal) return;
+      goal.progress = Math.min(100, Math.max(0, parseInt(val, 10) || 0));
+      saveState(`Goal progress updated to ${goal.progress}%`);
+      renderHierarchyTab();
+    };
+
+    window.deleteGoal = function(goalId) {
+      appState.goals = appState.goals.filter(g => g.id !== goalId);
+      saveState('90-Day Outcome removed');
+      renderAll();
+    };
+
+    window.toggleHabitDate = function(habitId, dateKey) {
+      const habit = appState.habits.find(h => h.id === habitId);
+      if (!habit) return;
+      if (!habit.history) habit.history = {};
+      if (habit.history[dateKey]) {
+        delete habit.history[dateKey];
+        saveState('Habit check-in cleared');
+      } else {
+        habit.history[dateKey] = true;
+        saveState('Habit logged! Streak updated 🔥');
+      }
+      renderAll();
+    };
+
+    window.deleteHabit = function(habitId) {
+      appState.habits = appState.habits.filter(h => h.id !== habitId);
+      saveState('Habit deleted');
+      renderAll();
+    };
+
+    window.deleteReview = function(revId) {
+      appState.reviews = appState.reviews.filter(r => r.id !== revId);
+      saveState('Reflection removed');
+      renderReviewTab();
+    };
+
+    // Modal Quick Open Helpers
+    window.openQuickAddForSlot = function(slotKey) {
+      openItemModal('task', null, slotKey, true);
+    };
+
+    window.openQuickAddForDimension = function(dimId) {
+      openItemModal('task', dimId, 'growth', false);
+    };
+
+    function openItemModal(defaultType, defaultDimId, defaultSlot, pinDaily) {
+      const modal = document.getElementById('itemModal');
+      const typeSelect = document.getElementById('modalEntityType');
+      typeSelect.value = defaultType || 'task';
+      if (defaultDimId) {
+        document.getElementById('modalDimensionInput').value = defaultDimId;
+      }
+      if (defaultSlot) {
+        document.getElementById('modalTaskDailySlot').value = defaultSlot;
+      }
+      document.getElementById('modalTaskPinDaily3').checked = Boolean(pinDaily);
+      document.getElementById('modalTaskDueInput').value = TODAY_KEY;
+      document.getElementById('modalTitleInput').value = '';
+      syncModalFieldsVisibility();
+      modal.classList.remove('hidden');
+    }
+
+    function syncModalFieldsVisibility() {
+      const type = document.getElementById('modalEntityType').value;
+      document.getElementById('modalTaskFields').classList.toggle('hidden', type !== 'task');
+      document.getElementById('modalGoalFields').classList.toggle('hidden', type !== 'goal');
+      document.getElementById('modalHabitFields').classList.toggle('hidden', type !== 'habit');
+    }
+
+    function escapeHtml(str) {
+      return String(str || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    function escapeAttr(str) {
+      return escapeHtml(str).replace(/'/g, '&#39;');
+    }
+
+    // =========================================================================
+    // WIRE UP DOM LISTENERS ON INIT
+    // =========================================================================
+    window.addEventListener('DOMContentLoaded', () => {
+      // Nav Tabs
+      document.querySelectorAll('.nav-tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          switchTab(btn.getAttribute('data-tab'));
+        });
+      });
+
+      // Dashboard shortcuts
+      document.getElementById('btnJumpNeglect').addEventListener('click', () => {
+        const el = document.getElementById('neglectAlertBox');
+        if (el) el.scrollIntoView({ behavior: 'smooth' });
+      });
+      document.getElementById('btnDashToHabits').addEventListener('click', () => switchTab('habits'));
+      document.getElementById('btnDashToDimensions').addEventListener('click', () => switchTab('dimensions'));
+
+      document.getElementById('btnAutoFillDaily3').addEventListener('click', () => {
+        ['responsibility', 'growth', 'family'].forEach(slotKey => {
+          const existing = appState.tasks.find(t => t.pinnedDaily3 && t.dailySlot === slotKey && !t.completed);
+          if (!existing) {
+            const candidate = appState.tasks.find(t => !t.completed && t.dailySlot === slotKey);
+            if (candidate) candidate.pinnedDaily3 = true;
+          }
+        });
+        saveState('Auto-filled Today\'s Daily 3 from open priorities');
+        renderAll();
+      });
+
+      // Hierarchy Filters
+      ['filterDimension', 'filterPriority', 'filterStatus'].forEach(id => {
+        document.getElementById(id).addEventListener('change', renderHierarchyTab);
+      });
+      document.getElementById('filterSearch').addEventListener('input', renderHierarchyTab);
+
+      // Open Item Modal buttons
+      document.getElementById('btnOpenQuickAdd').addEventListener('click', () => openItemModal('task', null, 'responsibility', false));
+      document.getElementById('btnAddGoalModal').addEventListener('click', () => openItemModal('goal'));
+      document.getElementById('btnAddTaskModal').addEventListener('click', () => openItemModal('task'));
+      document.getElementById('btnAddHabitModal').addEventListener('click', () => openItemModal('habit'));
+
+      document.getElementById('modalEntityType').addEventListener('change', syncModalFieldsVisibility);
+      document.getElementById('modalHabitFreqInput').addEventListener('change', (e) => {
+        document.getElementById('modalHabitCustomDaysRow').classList.toggle('hidden', e.target.value !== 'custom');
+      });
+
+      const closeItemModal = () => document.getElementById('itemModal').classList.add('hidden');
+      document.getElementById('btnCloseItemModal').addEventListener('click', closeItemModal);
+      document.getElementById('btnCancelItemModal').addEventListener('click', closeItemModal);
+
+      document.getElementById('btnSaveItemModal').addEventListener('click', () => {
+        const type = document.getElementById('modalEntityType').value;
+        const title = document.getElementById('modalTitleInput').value.trim();
+        const dimensionId = document.getElementById('modalDimensionInput').value;
+        const priority = document.getElementById('modalPriorityInput').value;
+
+        if (!title) {
+          showToast('Please enter a title first');
+          return;
+        }
+
+        const uid = 'id-' + Date.now();
+        if (type === 'task') {
+          const dueDate = document.getElementById('modalTaskDueInput').value || TODAY_KEY;
+          const dailySlot = document.getElementById('modalTaskDailySlot').value;
+          const pin = document.getElementById('modalTaskPinDaily3').checked;
+          if (pin) {
+            appState.tasks.forEach(t => {
+              if (t.dailySlot === dailySlot) t.pinnedDaily3 = false;
+            });
+          }
+          appState.tasks.unshift({
+            id: uid,
+            dimensionId,
+            title,
+            priority,
+            dueDate,
+            dailySlot,
+            pinnedDaily3: pin,
+            completed: false,
+            completedDate: null
+          });
+          saveState('New concrete action added');
+        } else if (type === 'goal') {
+          const quarter = document.getElementById('modalGoalQuarterInput').value.trim() || 'Q4 2026';
+          const progress = Math.min(100, Math.max(0, parseInt(document.getElementById('modalGoalProgressInput').value, 10) || 0));
+          appState.goals.unshift({
+            id: uid,
+            dimensionId,
+            title,
+            priority,
+            quarter,
+            progress
+          });
+          saveState('New 90-Day Outcome added');
+        } else if (type === 'habit') {
+          const frequency = document.getElementById('modalHabitFreqInput').value;
+          const reminderTime = document.getElementById('modalHabitReminderInput').value || '07:00';
+          const customDays = Array.from(document.querySelectorAll('.habit-day-cb:checked')).map(cb => parseInt(cb.value, 10));
+          appState.habits.push({
+            id: uid,
+            dimensionId,
+            title,
+            priority,
+            frequency,
+            customDays: customDays.length ? customDays : [1, 2, 3, 4, 5],
+            reminderTime,
+            history: {}
+          });
+          saveState('New v0.2 Habit added');
+        }
+
+        closeItemModal();
+        renderAll();
+      });
+
+      // Habit Reminders Check (v0.2)
+      document.getElementById('btnEnableNotifications').addEventListener('click', () => {
+        const pendingToday = appState.habits.filter(h => isHabitScheduledOnDate(h, TODAY_DATE) && !(h.history && h.history[TODAY_KEY]));
+        const banner = document.getElementById('reminderBanner');
+        const bannerText = document.getElementById('reminderBannerText');
+        if (pendingToday.length === 0) {
+          showToast('All scheduled habits for today are completed!');
+        } else {
+          const names = pendingToday.map(h => `${h.title} (${h.reminderTime || '07:00'})`).join(' • ');
+          bannerText.textContent = `⏰ Today's Pending Habit Reminders (${pendingToday.length}): ${names}`;
+          banner.classList.remove('hidden');
+          showToast(`${pendingToday.length} habit reminder(s) active for today`);
+        }
+      });
+
+      document.getElementById('btnDismissReminder').addEventListener('click', () => {
+        document.getElementById('reminderBanner').classList.add('hidden');
+      });
+
+      // 7-Day Calendar Navigation
+      document.getElementById('btnCalPrevWeek').addEventListener('click', () => {
+        appState.calendarOffsetDays = (appState.calendarOffsetDays || 0) - 7;
+        renderCalendarAndCharts();
+      });
+      document.getElementById('btnCalTodayWeek').addEventListener('click', () => {
+        appState.calendarOffsetDays = 0;
+        renderCalendarAndCharts();
+      });
+      document.getElementById('btnCalNextWeek').addEventListener('click', () => {
+        appState.calendarOffsetDays = (appState.calendarOffsetDays || 0) + 7;
+        renderCalendarAndCharts();
+      });
+
+      // Weekly Review Save
+      document.getElementById('btnSaveWeeklyReview').addEventListener('click', () => {
+        const wins = document.getElementById('reviewWinsInput').value.trim();
+        const blockers = document.getElementById('reviewBlockersInput').value.trim();
+        const nextFocus = document.getElementById('reviewNextFocusInput').value.trim();
+        if (!wins && !nextFocus) {
+          showToast('Enter your wins or next week priorities first');
+          return;
+        }
+        appState.reviews.unshift({
+          id: 'rev-' + Date.now(),
+          date: TODAY_KEY,
+          wins: wins || 'Reviewed weekly progress',
+          blockers: blockers || 'None noted',
+          nextFocus: nextFocus || 'Continue 90-day focus areas'
+        });
+        document.getElementById('reviewWinsInput').value = '';
+        document.getElementById('reviewBlockersInput').value = '';
+        document.getElementById('reviewNextFocusInput').value = '';
+        saveState('Weekly reflection logged!');
+        renderReviewTab();
+      });
+
+      // Backup & Sync Modal
+      const syncModal = document.getElementById('syncModal');
+      const openSyncModal = () => {
+        document.getElementById('jsonPasteTextarea').value = JSON.stringify(appState, null, 2);
+        document.getElementById('inputCloudSyncUrl').value = appState.syncEndpointUrl || '';
+        syncModal.classList.remove('hidden');
+      };
+      const closeSyncModal = () => syncModal.classList.add('hidden');
+
+      document.getElementById('btnOpenSyncModal').addEventListener('click', openSyncModal);
+      document.getElementById('btnCloseSyncModal').addEventListener('click', closeSyncModal);
+      document.getElementById('btnCloseSyncModalBottom').addEventListener('click', closeSyncModal);
+
+      // Download JSON
+      document.getElementById('btnDownloadJson').addEventListener('click', () => {
+        const dataStr = JSON.stringify(appState, null, 2);
+        const blob = new Blob([dataStr], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `personal-life-os-v0.2-backup-${TODAY_KEY}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        showToast('JSON backup file downloaded');
+      });
+
+      // Copy JSON with fallback
+      document.getElementById('btnCopyJsonClipboard').addEventListener('click', () => {
+        const textarea = document.getElementById('jsonPasteTextarea');
+        textarea.value = JSON.stringify(appState, null, 2);
+        textarea.select();
+        try {
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(textarea.value).then(() => {
+              showToast('JSON copied to clipboard');
+            }).catch(() => {
+              document.execCommand('copy');
+              showToast('JSON copied to clipboard');
+            });
+          } else {
+            document.execCommand('copy');
+            showToast('JSON copied to clipboard');
+          }
+        } catch (err) {
+          document.execCommand('copy');
+          showToast('JSON copied to clipboard');
+        }
+      });
+
+      // Import JSON from file
+      document.getElementById('inputJsonFile').addEventListener('change', (e) => {
+        const file = e.target.files && e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+          try {
+            const parsed = JSON.parse(ev.target.result);
+            if (parsed && Array.isArray(parsed.dimensions) && Array.isArray(parsed.tasks)) {
+              appState = parsed;
+              saveState('Backup JSON restored!');
+              document.getElementById('jsonPasteTextarea').value = JSON.stringify(appState, null, 2);
+              renderAll();
+            } else {
+              showToast('Invalid Personal Life OS JSON schema');
+            }
+          } catch (err) {
+            showToast('Failed to parse JSON file');
+          }
+        };
+        reader.readAsText(file);
+      });
+
+      // Apply pasted JSON
+      document.getElementById('btnApplyPastedJson').addEventListener('click', () => {
+        const raw = document.getElementById('jsonPasteTextarea').value.trim();
+        if (!raw) return;
+        try {
+          const parsed = JSON.parse(raw);
+          if (parsed && Array.isArray(parsed.dimensions) && Array.isArray(parsed.tasks)) {
+            appState = parsed;
+            saveState('State updated from pasted JSON!');
+            renderAll();
+          } else {
+            showToast('JSON missing required dimensions/tasks arrays');
+          }
+        } catch (err) {
+          showToast('Invalid JSON syntax');
+        }
+      });
+
+      // Save Cloud Sync Endpoint & Push/Pull handlers
+      document.getElementById('btnSaveSyncUrl').addEventListener('click', () => {
+        const url = document.getElementById('inputCloudSyncUrl').value.trim();
+        appState.syncEndpointUrl = url;
+        document.getElementById('syncEndpointStatus').textContent = url ? 'Endpoint Configured' : 'Local-First Mode';
+        saveState(url ? 'Cloud sync endpoint saved' : 'Switched to local-first mode');
+      });
+      document.getElementById('btnPushCloudNow').addEventListener('click', () => pushStateToCloud(false));
+      document.getElementById('btnPullCloudNow').addEventListener('click', () => pullStateFromCloud());
+      document.getElementById('cbAutoCloudSync').checked = Boolean(appState.autoCloudSync);
+      document.getElementById('cbAutoCloudSync').addEventListener('change', (e) => {
+        appState.autoCloudSync = Boolean(e.target.checked);
+        saveState(appState.autoCloudSync ? 'Auto-push to Google Drive enabled' : 'Auto-push disabled');
+      });
+
+      // Inline Reset Confirmation
+      document.getElementById('btnRequestReset').addEventListener('click', () => {
+        document.getElementById('confirmResetInline').classList.remove('hidden');
+      });
+      document.getElementById('btnConfirmResetNo').addEventListener('click', () => {
+        document.getElementById('confirmResetInline').classList.add('hidden');
+      });
+      document.getElementById('btnConfirmResetYes').addEventListener('click', () => {
+        appState = createDefaultState();
+        saveState('Reset to default starter data');
+        document.getElementById('confirmResetInline').classList.add('hidden');
+        document.getElementById('jsonPasteTextarea').value = JSON.stringify(appState, null, 2);
+        renderAll();
+      });
+
+      // v0.3 Smart Prioritizer & Analytics controls
+      document.getElementById('btnApplyAllSmartRecs').addEventListener('click', () => {
+        ['responsibility', 'growth', 'family'].forEach(slotKey => {
+          appState.tasks.forEach(t => {
+            if (t.dailySlot === slotKey) t.pinnedDaily3 = false;
+          });
+          const bestForSlot = appState.tasks
+            .filter(t => !t.completed && t.dailySlot === slotKey)
+            .map(t => ({ task: t, score: computeTaskSmartScore(t).score }))
+            .sort((a, b) => b.score - a.score)[0];
+          if (bestForSlot) {
+            bestForSlot.task.pinnedDaily3 = true;
+          }
+        });
+        saveState('Smart Prioritizer pinned highest-urgency actions to Daily 3!');
+        renderAll();
+      });
+
+      document.getElementById('v03QueueBucketFilter').addEventListener('change', renderV03AnalyticsTab);
+      document.getElementById('v03ChartModeSelect').addEventListener('change', renderV03Charts);
+      document.getElementById('v03WeeklyHoursSlider').addEventListener('input', renderV03CapacitySimulator);
+
+      // Initial render
+      renderAll();
+    });
+  </script>
+</body>
+</html>
+```
